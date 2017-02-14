@@ -259,6 +259,15 @@ namespace BoostTestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --list_content=DOT for {0} failed with exit code {1}. Skipping..
+        /// </summary>
+        internal static string ListContentProcessFailure {
+            get {
+                return ResourceManager.GetString("ListContentProcessFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to list_content file: {0}.
         /// </summary>
         internal static string ListContentsFile {
