@@ -346,8 +346,9 @@ namespace BoostTestAdapterNunit
 
             public bool ListContentSupported { get; private set; }
 
-            #endregion IBoostTestRunner
+            public bool VersionSupported { get; } = false;
 
+            #endregion IBoostTestRunner
 
             private void Copy(string embeddedResource, string path)
             {

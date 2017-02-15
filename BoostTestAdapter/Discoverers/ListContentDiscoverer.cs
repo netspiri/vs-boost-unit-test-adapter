@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace BoostTestAdapter.Discoverers
 {
@@ -135,7 +136,7 @@ namespace BoostTestAdapter.Discoverers
                             TestFramework framework = deserialiser.Deserialise(reader);
                             if ((framework != null) && (framework.MasterTestSuite != null))
                             {
-                                framework.MasterTestSuite.Apply(new VSDiscoveryVisitor(source, discoverySink));
+                                framework.MasterTestSuite.Apply(new VSDiscoveryVisitor(source, GetVersion(runner), discoverySink));
                             }
                         }
                     }
@@ -144,6 +145,52 @@ namespace BoostTestAdapter.Discoverers
                 {
                     Logger.Exception(ex, Resources.DiscoveryExceptionFor, source, ex.Message, ex.HResult);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Regular expression pattern for extracting Boost version from Boost.Test --version output
+        /// </summary>
+        private static readonly Regex _versionPattern = new Regex(@"Compiled from Boost version (\d+\.\d+.\d+)");
+
+        /// <summary>
+        /// Identify the version (if possible) of the Boost.Test module
+        /// </summary>
+        /// <param name="runner">The Boost.Test module</param>
+        /// <returns>The Boost version of the Boost.Test module or the empty string if the version cannot be retrieved</returns>
+        private static string GetVersion(IBoostTestRunner runner)
+        {
+            if (!runner.VersionSupported)
+            {
+                return string.Empty;
+            }
+
+            using (TemporaryFile output = new TemporaryFile(TestPathGenerator.Generate(runner.Source, ".version.stderr.log")))
+            {
+                BoostTestRunnerSettings settings = new BoostTestRunnerSettings();
+                BoostTestRunnerCommandLineArgs args = new BoostTestRunnerCommandLineArgs()
+                {
+                    Version = true,
+                    StandardErrorFile = output.Path
+                };
+
+                int resultCode = EXIT_SUCCESS;
+
+                using (var context = new DefaultProcessExecutionContext())
+                {
+                    resultCode = runner.Execute(args, settings, context);
+                }
+
+                if (resultCode != EXIT_SUCCESS)
+                {
+                    Logger.Error("--version for {0} failed with exit code {1}. Skipping.", runner.Source, resultCode);
+                    return string.Empty;
+                }
+
+                var info = File.ReadAllText(args.StandardErrorFile, System.Text.Encoding.ASCII);
+
+                var match = _versionPattern.Match(info);
+                return (match.Success) ? match.Groups[1].Value : string.Empty;
             }
         }
 

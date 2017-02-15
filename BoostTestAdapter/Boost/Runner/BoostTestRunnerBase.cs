@@ -97,6 +97,29 @@ namespace BoostTestAdapter.Boost.Runner
             }
         }
 
+        public virtual bool VersionSupported
+        {
+            get
+            {
+                try
+                {
+                    using (DebugHelper dbgHelp = new DebugHelper(this.TestRunnerExecutable))
+                    {
+                        return dbgHelp.ContainsSymbol("boost::unit_test::runtime_config::VERSION")          // Boost 1.63
+                            || dbgHelp.ContainsSymbol("boost::unit_test::runtime_config::btrt_version");    // Boost 1.64
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    Logger.Exception(ex, Resources.CouldNotCreateDbgHelp, this.Source);
+                }
+
+                return false;
+            }
+        }
+
+        #endregion IBoostTestRunner
+        
         /// <summary>
         /// Provides a ProcessExecutionContextArgs structure containing the necessary information to launch the test process.
         /// Aggregates the BoostTestRunnerCommandLineArgs structure with the command-line arguments specified at configuration stage.
@@ -116,8 +139,6 @@ namespace BoostTestAdapter.Boost.Runner
                 EnvironmentVariables = args.Environment
             };
         }
-
-        #endregion IBoostTestRunner
 
         /// <summary>
         /// Monitors the provided process for the specified timeout.
