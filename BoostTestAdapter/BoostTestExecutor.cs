@@ -450,13 +450,14 @@ namespace BoostTestAdapter
 
             return run.Runner != null;
         }
-        
+
         /// <summary>
         /// Retrieves and assigns parameters by resolving configurations from different possible resources
         /// </summary>
         /// <param name="source">The TestCases source</param>
         /// <param name="settings">The Boost Test adapter settings currently in use</param>
         /// <returns>A string for the default working directory</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void GetDebugConfigurationProperties(string source, BoostTestAdapterSettings settings, BoostTestRunnerCommandLineArgs args)
         {
             try
@@ -471,7 +472,15 @@ namespace BoostTestAdapter
             }
             catch (COMException ex)
             {
-                Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration-{0}", ex.Message);
+                Logger.Exception(ex, "Could not retrieve COM Object for Visual Studio to extract from Visual Studio Configuration");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.Exception(ex, "Could not load dependent file '{0}' to extract Visual Studio Configuration", ex.FileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex, "Could not load Visual Studio Configuration");
             }
         }
 

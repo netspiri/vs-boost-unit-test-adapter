@@ -101,7 +101,15 @@ namespace BoostTestAdapter.Discoverers
                 }
                 catch (COMException ex)
                 {
-                    Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration");
+                    Logger.Exception(ex, "Could not retrieve COM Object for Visual Studio to extract from Visual Studio Configuration");	
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Logger.Exception(ex, "Could not load dependent file '{0}' to extract Visual Studio Configuration", ex.FileName);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Exception(ex, "Could not load Visual Studio Configuration");
                 }
 
                 try

@@ -23,6 +23,7 @@ namespace BoostTestAdapterNunit
         /// <param name="versionMajor">version number that assembly must have</param>
         [TestCase("BoostTestAdapter.TestAdapter.dll", "Microsoft.VisualStudio.TestPlatform.ObjectModel", 14, TestName = "CorrectlyReferencedBoostTestAdapter", Description = "Microsoft.VisualStudio.TestPlatform.ObjectModel in BoostTestAdapter must point to the VS2015 version")]
         [TestCase("VisualStudio2015Adapter.dll", "Microsoft.VisualStudio.VCProjectEngine", 14, TestName = "CorrectlyReferencedVisualStudio2015Adapter", Description = "Microsoft.VisualStudio.VCProjectEngine in VisualStudio2015Adapter must point to the VS2015 version")]
+        [TestCase("VisualStudio2017Adapter.dll", "Microsoft.VisualStudio.VCProjectEngine", 15, TestName = "CorrectlyReferencedVisualStudio2017Adapter", Description = "Microsoft.VisualStudio.VCProjectEngine in VisualStudio2017Adapter must point to the VS2017 version")]
         public void CorrectReferences(string dll, string assemblyReferenceName, int versionMajor)
         {
             var assembly = Assembly.LoadFrom(Path.Combine(TestContext.CurrentContext.TestDirectory, dll));

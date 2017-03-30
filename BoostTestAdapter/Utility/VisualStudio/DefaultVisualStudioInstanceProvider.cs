@@ -42,9 +42,11 @@ namespace BoostTestAdapter.Utility.VisualStudio
 
                 if (dte?.DTE != null)
                 {
-                    if (dte.Version == "14")
+                    switch (dte.Version)
                     {
-                        return new VisualStudio2015Adapter.VisualStudio(dte.DTE);
+                        case "14": return new VisualStudio2015Adapter.VisualStudio(dte.DTE);
+                        case "15": return new VisualStudio2017Adapter.VisualStudio(dte.DTE);
+                        default: return null;
                     }
                 }
 

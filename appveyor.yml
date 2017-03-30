@@ -1,6 +1,6 @@
 # AppVeyor version is just a placeholder. Version is retrieved from source.extension.vsixmanifest and is automatically updated on build.
 version: '0.0.0.{build}'
-os: Windows Server 2012 R2
+image: Visual Studio 2017
 clone_depth: 5
 install:
 # Download and execute madskristensen AppVeyor VSIX ExtensionScripts in order to update revision number before project build
