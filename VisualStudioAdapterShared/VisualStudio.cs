@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using EnvDTE80;
 
 namespace VisualStudioAdapter.Shared
@@ -21,16 +23,12 @@ namespace VisualStudioAdapter.Shared
         /// <param name="dte">The DTE2 instance for a running Visual Studio instance</param>
         /// <param name="version">The version identifying the Visual Studio instance</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "dte"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "dte"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "dte")]
-        protected VisualStudio(DTE2 dte, string version)
+        protected VisualStudio(DTE2 dte)
         {
             this._dte = dte;
-
-            this.Version = version;
         }
 
         #region IVisualStudio
-
-        public string Version { get; private set; }
 
         public ISolution Solution
         {
@@ -47,14 +45,5 @@ namespace VisualStudioAdapter.Shared
         }
 
         #endregion IVisualStudio
-
-        #region Object Overrides
-
-        public override string ToString()
-        {
-            return "!VisualStudio.DTE." + this.Version;
-        }
-
-        #endregion Object Overrides
     }
 }

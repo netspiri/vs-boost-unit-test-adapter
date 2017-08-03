@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System.Collections.Generic;
 using FakeItEasy;
 using VisualStudioAdapter;
@@ -45,7 +47,6 @@ namespace BoostTestAdapterNunit.Utility
         {
             IVisualStudio fake = A.Fake<IVisualStudio>();
 
-            A.CallTo(() => fake.Version).Returns("MockVisualStudioInstance");
             A.CallTo(() => fake.Solution).Returns(this._solution);
 
             return fake;

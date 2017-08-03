@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 namespace VisualStudioAdapter
 {
     /// <summary>
@@ -10,11 +12,6 @@ namespace VisualStudioAdapter
     /// </summary>
     public interface IVisualStudio
     {
-        /// <summary>
-        /// Visual Studio version. Identifies the incremental version e.g. VS2012 -> 11, VS2013 -> 12
-        /// </summary>
-        string Version { get; }
-
         /// <summary>
         /// Currently loaded solution.
         /// </summary>
