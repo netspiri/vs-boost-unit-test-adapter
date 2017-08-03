@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.IO;
 using System.Linq;
@@ -89,7 +91,7 @@ namespace BoostTestAdapterNunit
             }).Returns(0);
 
             FakeBoostTestRunnerFactory factory = new FakeBoostTestRunnerFactory(runner);
-            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyVSProvider.Default);
+            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyBoostTestPackageServiceFactory.Default);
 
             DefaultTestContext context = new DefaultTestContext();
             DefaultTestCaseDiscoverySink sink = new DefaultTestCaseDiscoverySink();
@@ -141,7 +143,7 @@ namespace BoostTestAdapterNunit
             A.CallTo(() => runner.Execute(A<BoostTestRunnerCommandLineArgs>._, A<BoostTestRunnerSettings>._, A<IProcessExecutionContext>._)).Returns(-1073741515);
 
             FakeBoostTestRunnerFactory factory = new FakeBoostTestRunnerFactory(runner);
-            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyVSProvider.Default);
+            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyBoostTestPackageServiceFactory.Default);
 
             DefaultTestContext context = new DefaultTestContext();
             DefaultTestCaseDiscoverySink sink = new DefaultTestCaseDiscoverySink();
@@ -179,7 +181,7 @@ namespace BoostTestAdapterNunit
             }).Returns(0);
 
             FakeBoostTestRunnerFactory factory = new FakeBoostTestRunnerFactory(runner);
-            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyVSProvider.Default);
+            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyBoostTestPackageServiceFactory.Default);
 
             DefaultTestContext context = new DefaultTestContext();
             DefaultTestCaseDiscoverySink sink = new DefaultTestCaseDiscoverySink();
@@ -224,7 +226,7 @@ namespace BoostTestAdapterNunit
             }).Returns(0);
 
             FakeBoostTestRunnerFactory factory = new FakeBoostTestRunnerFactory(runner);
-            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyVSProvider.Default);
+            ListContentDiscoverer discoverer = new ListContentDiscoverer(factory, DummyBoostTestPackageServiceFactory.Default);
 
             DefaultTestContext context = new DefaultTestContext();
             DefaultTestCaseDiscoverySink sink = new DefaultTestCaseDiscoverySink();

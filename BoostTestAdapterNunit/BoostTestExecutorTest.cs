@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,19 +40,9 @@ namespace BoostTestAdapterNunit
             this.Executor = new BoostTestExecutor(
                 this.RunnerFactory,
                 new StubBoostTestDiscovererFactory(this),
-                new DummyVSProvider
+                new DummyBoostTestPackageServiceFactory
                 (
-                    new FakeVisualStudioInstanceBuilder()
-                        .Solution
-                        (
-                            new FakeSolutionBuilder()        
-                                .Project
-                                (
-                                    new FakeProjectBuilder()
-                                        .PrimaryOutput(DefaultSource)
-                                )
-                        )
-                    .Build()
+                    new FakeBoostTestPackageServiceInstanceBuilder().Build()
                 )
             );
 
@@ -1268,7 +1260,7 @@ namespace BoostTestAdapterNunit
             IBoostTestRunnerFactory runnerFactory = A.Fake<IBoostTestRunnerFactory>();
             A.CallTo(() => runnerFactory.GetRunner(A<string>._, A<BoostTestRunnerFactoryOptions>._)).Returns(runner);
             
-            var executor = new BoostTestExecutor(runnerFactory, new StubBoostTestDiscovererFactory(this), DummyVSProvider.Default);
+            var executor = new BoostTestExecutor(runnerFactory, new StubBoostTestDiscovererFactory(this), DummyBoostTestPackageServiceFactory.Default);
 
             executor.RunTests(
                 new string[] { DefaultSource },

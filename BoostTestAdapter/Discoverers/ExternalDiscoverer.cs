@@ -3,13 +3,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System.Collections.Generic;
+// This file has been modified by Microsoft on 8/2017.
+
+using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Settings;
 using BoostTestAdapter.Utility;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Utility.VisualStudio;
-using BoostTestAdapter.Utility.ExecutionContext;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using System.Collections.Generic;
 
 namespace BoostTestAdapter.Discoverers
 {
@@ -23,7 +24,7 @@ namespace BoostTestAdapter.Discoverers
         /// </summary>
         /// <param name="settings">Settings for this instance of the discoverer.</param>
         public ExternalDiscoverer(ExternalBoostTestRunnerSettings settings)
-            : this(settings, new DefaultVisualStudioInstanceProvider())
+            : this(settings, new DefaultBoostTestPackageServiceFactory())
         {
         }
 
@@ -31,11 +32,11 @@ namespace BoostTestAdapter.Discoverers
         /// Constructor.
         /// </summary>
         /// <param name="settings">Settings for this instance of the discoverer.</param>
-        /// <param name="provider">Visual Studio Instance provider</param>
-        public ExternalDiscoverer(ExternalBoostTestRunnerSettings settings, IVisualStudioInstanceProvider provider)
+        /// <param name="packageServiceFactory">Boost Test Package Service factory</param>
+        public ExternalDiscoverer(ExternalBoostTestRunnerSettings settings, IBoostTestPackageServiceFactory packageServiceFactory)
         {
             Settings = settings;
-            VSProvider = provider;
+            PackageServiceFactory = packageServiceFactory;
         }
 
         /// <summary>
@@ -44,9 +45,9 @@ namespace BoostTestAdapter.Discoverers
         public ExternalBoostTestRunnerSettings Settings { get; private set; }
 
         /// <summary>
-        /// Visual Studio Instance Provider
+        /// Boost Test Package Service factory
         /// </summary>
-        public IVisualStudioInstanceProvider VSProvider { get; private set; }
+        public IBoostTestPackageServiceFactory PackageServiceFactory { get; private set; }
         
         #region IBoostTestDiscoverer
 
@@ -58,14 +59,13 @@ namespace BoostTestAdapter.Discoverers
             if (this.Settings.DiscoveryMethodType == DiscoveryMethodType.DiscoveryListContent)
             {
                 // Delegate to ListContentDiscoverer
-                ListContentDiscoverer discoverer = new ListContentDiscoverer(new ExternalBoostTestRunnerFactory(), VSProvider);
+                ListContentDiscoverer discoverer = new ListContentDiscoverer(new ExternalBoostTestRunnerFactory(), PackageServiceFactory);
                 discoverer.DiscoverTests(sources, discoveryContext, discoverySink);
-            }            
+            }
         }
 
         #endregion IBoostTestDiscoverer
-
-
+        
         /// <summary>
         /// Internal IBoostTestRunnerFactory implementation which
         /// exclusively produces ExternalBoostTestRunner instances.

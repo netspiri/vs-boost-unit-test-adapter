@@ -81,8 +81,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSourceFilterTest.cs" />
     <Compile Include="Fakes\DummySolution.cs" />
-    <Compile Include="Fakes\DummyVSProvider.cs" />
+    <Compile Include="Fakes\DummyBoostTestPackageServiceFactory.cs" />
     <Compile Include="Utility\BoostTestLocator.cs" />
+    <Compile Include="Utility\BoostTestPackageServiceInstanceBuilder.cs" />
     <Compile Include="Utility\FrameworkEqualityVisitor.cs" />
     <Compile Include="Utility\TestHelper.cs" />
     <Compile Include="Utility\VisualStudioInstanceBuilders.cs" />
@@ -97,6 +98,14 @@
     <ProjectReference Include="..\BoostTestAdapter\BoostTestAdapter.csproj">
       <Project>{bc4b3bed-9241-4dd6-8070-a9b66dfc08c1}</Project>
       <Name>BoostTestAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BoostTestShared\BoostTestShared.csproj">
+      <Project>{678B7C85-7906-46DD-810C-E0EF0121B3B3}</Project>
+      <Name>BoostTestShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VisualStudio2015Adapter\VisualStudio2015Adapter.csproj">
+      <Project>{eb0051e3-1dda-418c-abaf-c1da5339114c}</Project>
+      <Name>VisualStudio2015Adapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\VisualStudioAdapter\VisualStudioAdapter.csproj">
       <Project>{62347cc7-c839-413d-a7ce-598409f6f15b}</Project>

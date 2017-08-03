@@ -3,22 +3,19 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
-
-using BoostTestAdapter.Settings;
-using BoostTestAdapter.Utility;
-
 using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Boost.Test;
-
-using BoostTestAdapter.Utility.VisualStudio;
-
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using BoostTestAdapter.Settings;
+using BoostTestAdapter.Utility;
 using BoostTestAdapter.Utility.ExecutionContext;
+using BoostTestAdapter.Utility.VisualStudio;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace BoostTestAdapter.Discoverers
 {
@@ -31,22 +28,22 @@ namespace BoostTestAdapter.Discoverers
         #region Constructors
 
         /// <summary>
-        /// Default constructor. A default implementation of IBoostTestRunnerFactory is provided.
+        /// Default constructor. Default implementations of IBoostTestRunnerFactory and IBoostTestPackageServiceFactory are provided.
         /// </summary>
         public ListContentDiscoverer()
-            : this(new DefaultBoostTestRunnerFactory(), new DefaultVisualStudioInstanceProvider())
+            : this(new DefaultBoostTestRunnerFactory(), new DefaultBoostTestPackageServiceFactory())
         {
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="factory">A custom implementation of IBoostTestRunnerFactory.</param>
-        /// <param name="vsProvider">Visual Studio Instance Provider</param>
-        public ListContentDiscoverer(IBoostTestRunnerFactory factory, IVisualStudioInstanceProvider vsProvider)
+        /// <param name="runnerFactory">A custom implementation of IBoostTestRunnerFactory.</param>
+        /// <param name="packageServiceFactory">A custom implementation of IBoostTestPackageServiceFactory</param>
+        public ListContentDiscoverer(IBoostTestRunnerFactory runnerFactory, IBoostTestPackageServiceFactory packageServiceFactory)
         {
-            _factory = factory;
-            _vsProvider = vsProvider;
+            _runnerFactory = runnerFactory;
+            _packageServiceFactory = packageServiceFactory;
         }
 
         #endregion
@@ -59,8 +56,8 @@ namespace BoostTestAdapter.Discoverers
 
         #region Members
 
-        private readonly IBoostTestRunnerFactory _factory;
-        private readonly IVisualStudioInstanceProvider _vsProvider;
+        private readonly IBoostTestRunnerFactory _runnerFactory;
+        private readonly IBoostTestPackageServiceFactory _packageServiceFactory;
 
         #endregion
 
@@ -86,31 +83,24 @@ namespace BoostTestAdapter.Discoverers
             {
                 ListContent = ListContentFormat.DOT
             };
-            
+
             foreach (var source in sources)
             {
                 try
                 {
-                    var vs = _vsProvider?.Instance;
-                    if (vs != null)
+                    using (var packageService = _packageServiceFactory.Create())
                     {
-                        Logger.Debug("Connected to Visual Studio {0} instance", vs.Version);
+                        args.SetWorkingEnvironment(source, settings, packageService);
                     }
-
-                    args.SetWorkingEnvironment(source, settings, vs);
                 }
-                catch (ROTException ex)
-                {
-                    Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration");
-                }
-                catch (COMException ex)
+                catch (Exception ex)
                 {
                     Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration");
                 }
 
                 try
                 {
-                    IBoostTestRunner runner = _factory.GetRunner(source, settings.TestRunnerFactoryOptions);
+                    IBoostTestRunner runner = _runnerFactory.GetRunner(source, settings.TestRunnerFactoryOptions);
                     using (TemporaryFile output = new TemporaryFile(TestPathGenerator.Generate(source, ".list.content.gv")))
                     {
                         // --list_content output is redirected to standard error

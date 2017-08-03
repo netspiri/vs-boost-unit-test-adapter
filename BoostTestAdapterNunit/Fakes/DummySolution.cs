@@ -3,11 +3,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+// This file has been modified by Microsoft on 8/2017.
+
 using BoostTestAdapter.Utility.VisualStudio;
-using VisualStudioAdapter;
+using System.Collections.Generic;
 
 namespace BoostTestAdapterNunit.Utility
 {
@@ -51,9 +50,9 @@ namespace BoostTestAdapterNunit.Utility
         public IEnumerable<string> SourceFiles { get; private set; }
 
         /// <summary>
-        /// The IVisualStudio instance provider for this DummySolution
+        /// The IBoostTestPackageServiceFactory for this DummySolution
         /// </summary>
-        public IVisualStudioInstanceProvider Provider { get; private set; }
+        public IBoostTestPackageServiceFactory PackageServiceFactory { get; private set; }
 
      }
 }

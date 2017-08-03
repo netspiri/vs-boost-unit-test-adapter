@@ -3,28 +3,27 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using System.Threading;
-using System.Runtime.InteropServices;
-
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using VSTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
-using VSTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
+// This file has been modified by Microsoft on 8/2017.
 
 using BoostTestAdapter.Boost.Results;
 using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Settings;
 using BoostTestAdapter.TestBatch;
 using BoostTestAdapter.Utility;
-using BoostTestAdapter.Utility.VisualStudio;
 using BoostTestAdapter.Utility.ExecutionContext;
+using BoostTestAdapter.Utility.VisualStudio;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Xml;
 using BoostTestResult = BoostTestAdapter.Boost.Results.TestResult;
+using VSTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
+using VSTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 
 namespace BoostTestAdapter
 {
@@ -64,7 +63,7 @@ namespace BoostTestAdapter
         {
             _testRunnerFactory = new DefaultBoostTestRunnerFactory();
             _boostTestDiscovererFactory = new BoostTestDiscovererFactory(_testRunnerFactory);
-            _vsProvider = new DefaultVisualStudioInstanceProvider();
+            _packageServiceFactory = new DefaultBoostTestPackageServiceFactory();
 
             _cancelled = false;
         }
@@ -72,14 +71,14 @@ namespace BoostTestAdapter
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="testRunnerFactory">The IBoostTestRunnerFactory which is to be used</param>
-        /// <param name="boostTestDiscovererFactory">The IBoostTestDiscovererFactory which is to be used</param>
-        /// <param name="provider">The Visual Studio instance provider</param>
-        public BoostTestExecutor(IBoostTestRunnerFactory testRunnerFactory, IBoostTestDiscovererFactory boostTestDiscovererFactory, IVisualStudioInstanceProvider provider)
+        /// <param name="testRunnerFactory">The IBoostTestRunnerFactory to be used</param>
+        /// <param name="boostTestDiscovererFactory">The IBoostTestDiscovererFactory to be used</param>
+        /// <param name="packageServiceFactory">The IBoostTestDiscovererFactory to be used</param>
+        public BoostTestExecutor(IBoostTestRunnerFactory testRunnerFactory, IBoostTestDiscovererFactory boostTestDiscovererFactory, IBoostTestPackageServiceFactory packageServiceFactory)
         {
             _testRunnerFactory = testRunnerFactory;
             _boostTestDiscovererFactory = boostTestDiscovererFactory;
-            _vsProvider = provider;
+            _packageServiceFactory = packageServiceFactory;
 
             _cancelled = false;
         }
@@ -104,9 +103,9 @@ namespace BoostTestAdapter
         private readonly IBoostTestRunnerFactory _testRunnerFactory;
 
         /// <summary>
-        /// The Visual Studio instance provider
+        /// The Boost Test Package Service factory
         /// </summary>
-        private readonly IVisualStudioInstanceProvider _vsProvider;
+        private readonly IBoostTestPackageServiceFactory _packageServiceFactory;
 
         #endregion Member variables
         
@@ -451,30 +450,24 @@ namespace BoostTestAdapter
 
             return run.Runner != null;
         }
-        
+
         /// <summary>
         /// Retrieves and assigns parameters by resolving configurations from different possible resources
         /// </summary>
         /// <param name="source">The TestCases source</param>
         /// <param name="settings">The Boost Test adapter settings currently in use</param>
         /// <returns>A string for the default working directory</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void GetDebugConfigurationProperties(string source, BoostTestAdapterSettings settings, BoostTestRunnerCommandLineArgs args)
         {
             try
             {
-                var vs = _vsProvider?.Instance;
-                if (vs != null)
+                using (var packageService = _packageServiceFactory.Create())
                 {
-                    Logger.Debug("Connected to Visual Studio {0} instance", vs.Version);
+                    args.SetWorkingEnvironment(source, settings, packageService);
                 }
-
-                args.SetWorkingEnvironment(source, settings, vs);
             }
-            catch (ROTException ex)
-            {
-                Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration");
-            }
-            catch (COMException ex)
+            catch (Exception ex)
             {
                 Logger.Exception(ex, "Could not retrieve WorkingDirectory from Visual Studio Configuration-{0}", ex.Message);
             }

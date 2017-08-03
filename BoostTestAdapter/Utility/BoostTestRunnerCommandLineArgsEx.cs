@@ -3,15 +3,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.IO;
-using System.Collections.Generic;
+// This file has been modified by Microsoft on 8/2017.
 
 using BoostTestAdapter.Boost.Runner;
-
 using BoostTestAdapter.Settings;
-
-using VisualStudioAdapter;
+using BoostTestShared;
+using System;
+using System.IO;
 
 namespace BoostTestAdapter.Utility
 {
@@ -46,9 +44,8 @@ namespace BoostTestAdapter.Utility
         /// <param name="args">The arguments which to set</param>
         /// <param name="source">The base source which will be executed</param>
         /// <param name="settings">The BoostTestAdapterSettings which are currently applied</param>
-        /// <param name="vs">The current Visual Studio instance (if available)</param>
-        /// <exception cref="COMException"></exception>
-        public static void SetWorkingEnvironment(this BoostTestRunnerCommandLineArgs args, string source, BoostTestAdapterSettings settings, IVisualStudio vs)
+        /// <param name="packageService">The current BoostTestPackageService (if available)</param>
+        public static void SetWorkingEnvironment(this BoostTestRunnerCommandLineArgs args, string source, BoostTestAdapterSettings settings, IBoostTestPackageServiceWrapper packageService)
         {
             Code.Require(args, "args");
             Code.Require(source, "source");
@@ -63,39 +60,14 @@ namespace BoostTestAdapter.Utility
                 args.WorkingDirectory = settings.WorkingDirectory;
             }
 
-            if (vs != null)
+            if (packageService != null)
             {
                 // Visual Studio configuration has higher priority over settings (if available)
-                IVSDebugConfiguration vsConfiguration = LocateVSDebugConfiguration(source, vs);
-                if (vsConfiguration != null)
-                {
-                    args.WorkingDirectory = vsConfiguration.WorkingDirectory;
-                    args.SetEnvironment(vsConfiguration.Environment);
-                }
+                args.WorkingDirectory = packageService.Service.GetWorkingDirectory(source) ?? args.WorkingDirectory;
+                args.SetEnvironment(packageService.Service.GetEnvironment(source));
             }
             // Enforce windows style backward slashes
             args.WorkingDirectory = args.WorkingDirectory.Replace('/', '\\');
-        }
-
-        /// <summary>
-        /// Locates the Visual Studio Debug configuration for the provided source
-        /// </summary>
-        /// <param name="source">The source to lookup its Visual Studio configuration</param>
-        /// <param name="vs">The Visual Studio instance from which to search</param>
-        /// <returns>The respective Visual Studio debug configuration or null if it cannot be located</returns>
-        private static IVSDebugConfiguration LocateVSDebugConfiguration(string source, IVisualStudio vs)
-        {
-            foreach (var project in vs.Solution.Projects)
-            {
-                var configuration = project.ActiveConfiguration;
-
-                if (string.Equals(source, configuration.PrimaryOutput, StringComparison.Ordinal))
-                {
-                    return configuration.VSDebugConfiguration;
-                }
-            }
-
-            return null;
         }
     }
 }

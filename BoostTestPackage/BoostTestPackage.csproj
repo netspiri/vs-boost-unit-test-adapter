@@ -51,6 +51,12 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -84,6 +90,14 @@
     <ProjectReference Include="..\BoostTestShared\BoostTestShared.csproj">
       <Project>{678b7c85-7906-46dd-810c-e0ef0121b3b3}</Project>
       <Name>BoostTestShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VisualStudio2015Adapter\VisualStudio2015Adapter.csproj">
+      <Project>{eb0051e3-1dda-418c-abaf-c1da5339114c}</Project>
+      <Name>VisualStudio2015Adapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VisualStudioAdapter\VisualStudioAdapter.csproj">
+      <Project>{62347cc7-c839-413d-a7ce-598409f6f15b}</Project>
+      <Name>VisualStudioAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -78,7 +80,7 @@ namespace BoostTestAdapterNunit
 
                 discoverers.Add(new FactoryResult()
                 {
-                    Discoverer = new ExternalDiscoverer(settings.ExternalTestRunner, _dummySolution.Provider),
+                    Discoverer = new ExternalDiscoverer(settings.ExternalTestRunner, _dummySolution.PackageServiceFactory),
                     Sources = extSources
                 });
 
@@ -97,7 +99,7 @@ namespace BoostTestAdapterNunit
 
                 discoverers.Add(new FactoryResult()
                 {
-                    Discoverer = new ListContentDiscoverer(factory, _dummySolution.Provider),
+                    Discoverer = new ListContentDiscoverer(factory, _dummySolution.PackageServiceFactory),
                     Sources = listContentSources
                 });
 
