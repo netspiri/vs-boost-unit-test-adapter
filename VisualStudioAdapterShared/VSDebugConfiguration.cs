@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 
 using Microsoft.VisualStudio.VCProjectEngine;
@@ -35,7 +37,7 @@ namespace VisualStudioAdapter.Shared
             get
             {
                 return this._configuration;
-            }                        
+            }
         }
 
         #region IVSConfiguration
@@ -47,8 +49,8 @@ namespace VisualStudioAdapter.Shared
         {
             get
             {
-                VCDebugSettings setting = this._configuration.DebugSettings as VCDebugSettings;
-                return this._configuration.Evaluate(setting.WorkingDirectory);
+                var rule = this._configuration.Rules.Item("WindowsLocalDebugger") as IVCRulePropertyStorage;
+                return rule.GetEvaluatedPropertyValue("LocalDebuggerWorkingDirectory");
             }
         }
 
@@ -59,8 +61,8 @@ namespace VisualStudioAdapter.Shared
         {
             get
             {
-                VCDebugSettings setting = this._configuration.DebugSettings as VCDebugSettings;
-                return this._configuration.Evaluate(setting.Environment);
+                var rule = this._configuration.Rules.Item("WindowsLocalDebugger") as IVCRulePropertyStorage;
+                return rule.GetEvaluatedPropertyValue("LocalDebuggerEnvironment");
             }
         }
 
