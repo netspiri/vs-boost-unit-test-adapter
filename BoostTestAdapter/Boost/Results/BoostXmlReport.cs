@@ -3,13 +3,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.Globalization;
-using System.IO;
-using System.Xml.XPath;
-using System.Collections.Generic;
+// This file has been modified by Microsoft on 8/2017.
+
 using BoostTestAdapter.Boost.Test;
 using BoostTestAdapter.Utility;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace BoostTestAdapter.Boost.Results
 {
@@ -52,9 +55,13 @@ namespace BoostTestAdapter.Boost.Results
 
         #region BoostTestResultXMLOutput
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         protected override IDictionary<string, TestResult> ParseXml(string xml)
         {
-            using (var reader = new StringReader(xml))
+            var xmlSettings = new XmlReaderSettings();
+            xmlSettings.XmlResolver = null;
+            using (var stringReader = new StringReader(xml))
+            using (var reader = XmlReader.Create(stringReader, xmlSettings))
             {
                 XPathDocument doc = new XPathDocument(reader);
                 XPathNavigator nav = doc.CreateNavigator();

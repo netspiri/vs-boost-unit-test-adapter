@@ -3,12 +3,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System.Globalization;
-using System.Xml;
-using System.Linq;
-using System.Collections.Generic;
+// This file has been modified by Microsoft on 8/2017.
+
 using BoostTestAdapter.Boost.Results.LogEntryTypes;
 using BoostTestAdapter.Utility;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Xml;
 
 namespace BoostTestAdapter.Boost.Results
 {
@@ -59,19 +62,24 @@ namespace BoostTestAdapter.Boost.Results
 
         #region BoostTestResultXMLOutput
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         protected override IDictionary<string, TestResult> ParseXml(string xml)
         {
             // serge: now log output for dependent test cases supported, the have additional XML
             // element, that corrupts XML document structure
-            using (XmlTextReader xtr = new XmlTextReader(xml, XmlNodeType.Element, null))
+            var xmlSettings = new XmlReaderSettings();
+            xmlSettings.ConformanceLevel = ConformanceLevel.Fragment;
+            xmlSettings.XmlResolver = null;
+            using (var stringReader = new StringReader(xml))
+            using (var xmlReader = XmlReader.Create(stringReader, xmlSettings))
             {
-                while (xtr.Read())
+                while (xmlReader.Read())
                 {
-                    if (xtr.NodeType == XmlNodeType.Element && xtr.Name == Xml.TestLog)
+                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == Xml.TestLog)
                     {
                         XmlDocument doc = new XmlDocument();
                         XmlElement elemTestLog = doc.CreateElement(Xml.TestLog);
-                        elemTestLog.InnerXml = xtr.ReadInnerXml();
+                        elemTestLog.InnerXml = xmlReader.ReadInnerXml();
                         ParseTestUnitsLog(elemTestLog.ChildNodes, new QualifiedNameBuilder(), Target);
                         break;
                     }
