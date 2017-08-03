@@ -147,7 +147,6 @@
     <Compile Include="Utility\ExecutionContext\IProcessExecutionContext.cs" />
     <Compile Include="Utility\NativeJobManagement.cs" />
     <Compile Include="Utility\Logger.cs" />
-    <Compile Include="Utility\NativeMethods.cs" />
     <Compile Include="Utility\QualifiedNameBuilder.cs" />
     <Compile Include="Utility\ROTException.cs" />
     <Compile Include="Utility\SourceFileInfo.cs" />
@@ -167,8 +166,6 @@
       <Project>{678b7c85-7906-46dd-810c-e0ef0121b3b3}</Project>
       <Name>BoostTestShared</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

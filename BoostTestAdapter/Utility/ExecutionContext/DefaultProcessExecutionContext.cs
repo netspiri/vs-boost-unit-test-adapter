@@ -3,10 +3,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.Diagnostics;
+// This file has been modified by Microsoft on 8/2017.
 
 using JobManagement;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace BoostTestAdapter.Utility.ExecutionContext
 {
@@ -101,9 +103,9 @@ namespace BoostTestAdapter.Utility.ExecutionContext
                 WindowStyle = ProcessWindowStyle.Hidden,
 
                 WorkingDirectory = args.WorkingDirectory,
-                
+
                 // Start the process through cmd.exe to allow redirection operators to work as expected
-                FileName = "cmd.exe",
+                FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe"),
                 Arguments = "/S /C \"\"" + args.FilePath + "\" " + args.Arguments + '"',
 
                 // Redirection should be specified as part of 'args.Arguments' and sent to a file
