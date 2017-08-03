@@ -62,11 +62,29 @@ namespace BoostTestAdapter.Utility
 
             if (packageService != null)
             {
-                // Visual Studio configuration has higher priority over settings (if available)
-                args.WorkingDirectory = packageService.Service.GetWorkingDirectory(source) ?? args.WorkingDirectory;
-                args.SetEnvironment(packageService.Service.GetEnvironment(source));
+                // Visual Studio configuration (if available) has higher priority over settings
+                string vsWorkingDirectory = packageService.Service.GetWorkingDirectory(source);
+                if (vsWorkingDirectory != null)
+                {
+                    args.WorkingDirectory = vsWorkingDirectory;
+                }
+                else
+                {
+                    Logger.Warn("Could not obtain working directory for {0} from project properties.", source);
+                }
+
+                string vsEnvironment = packageService.Service.GetEnvironment(source);
+                if (vsEnvironment != null)
+                {
+                    args.SetEnvironment(vsEnvironment);
+                }
+                else
+                {
+                    Logger.Warn("Could not obtain environment for {0} from project properties.", source);
+                }
             }
-            // Enforce windows style backward slashes
+
+            // Enforce Windows style backward slashes
             args.WorkingDirectory = args.WorkingDirectory.Replace('/', '\\');
         }
     }
