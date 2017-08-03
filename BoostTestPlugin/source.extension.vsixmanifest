@@ -21,6 +21,7 @@ In case of any issues please file an issue at https://github.com/etas/vs-boost-u
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,]" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0,15.0)" />
     </Dependencies>
     <Assets>
         <Asset d:Source="Project" d:ProjectName="BoostTestAdapter" Type="Microsoft.VisualStudio.MefComponent" Path="|BoostTestAdapter|" />
@@ -31,5 +32,6 @@ In case of any issues please file an issue at https://github.com/etas/vs-boost-u
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="VisualStudioAdapter" Path="|VisualStudioAdapter|" AssemblyName="|VisualStudioAdapter;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="VisualStudio2015Adapter" Path="|VisualStudio2015Adapter|" AssemblyName="|VisualStudio2015Adapter;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Antlr.DOT" Path="|Antlr.DOT|" AssemblyName="|Antlr.DOT;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="BoostTestPackage" Path="|BoostTestPackage;PkgdefProjectOutputGroup|" />
     </Assets>
 </PackageManifest>
