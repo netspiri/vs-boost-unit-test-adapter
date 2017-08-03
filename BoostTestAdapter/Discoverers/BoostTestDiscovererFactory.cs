@@ -92,7 +92,7 @@ namespace BoostTestAdapter
                 }
 
                 // Skip modules which are not .exe
-                if (string.Compare(extension, BoostTestDiscoverer.ExeExtension, true) != 0)
+                if (string.Compare(extension, BoostTestDiscoverer.ExeExtension, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     continue;
                 }

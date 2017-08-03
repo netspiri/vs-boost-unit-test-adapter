@@ -1,5 +1,7 @@
 ﻿// http://stackoverflow.com/questions/6266820/working-example-of-createjobobject-setinformationjobobject-pinvoke-in-net/9164742#9164742
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.Diagnostics;
 using System.Runtime.ConstrainedExecution;
@@ -112,14 +114,6 @@ namespace JobManagement
         public UIntPtr Affinity;
         public UInt32 PriorityClass;
         public UInt32 SchedulingClass;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SECURITY_ATTRIBUTES
-    {
-        public UInt32 nLength;
-        public IntPtr lpSecurityDescriptor;
-        public Int32 bInheritHandle;
     }
 
     [StructLayout(LayoutKind.Sequential)]

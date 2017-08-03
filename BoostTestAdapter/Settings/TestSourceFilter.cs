@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -17,11 +19,6 @@ namespace BoostTestAdapter.Settings
     public class TestSourceFilter
     {
         public const string XmlRootName = "Filters";
-
-        /// <summary>
-        /// Defines an empty filter collection
-        /// </summary>
-        public static readonly TestSourceFilter Empty = new TestSourceFilter();
 
         /// <summary>
         /// The test filter pattern white-list. Test source paths which match a filter are accepted.
@@ -111,6 +108,22 @@ namespace BoostTestAdapter.Settings
         public static bool IsNullOrEmpty(TestSourceFilter filter)
         {
             return ((filter == null) || (filter.IsEmpty));
+        }
+
+        public override bool Equals(object obj)
+        {
+            var filter = obj as TestSourceFilter;
+            return filter != null &&
+                   EqualityComparer<List<string>>.Default.Equals(Include, filter.Include) &&
+                   EqualityComparer<List<string>>.Default.Equals(Exclude, filter.Exclude);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1139977320;
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<string>>.Default.GetHashCode(Include);
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<string>>.Default.GetHashCode(Exclude);
+            return hashCode;
         }
     }
 }

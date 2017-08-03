@@ -52,6 +52,7 @@ namespace BoostTestAdapterNunit
         /// <param name="resource">Path to an embedded resource which is to be treated as input for TestFramework deserialisation</param>
         /// <param name="expected">The TestFramework which the deserialised version should be compared against</param>
         /// <param name="encoding">The encoding by which to interpret the resource file</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private void Compare(string resource, TestFramework expected, Encoding encoding)
         {
             using (var stream = TestHelper.LoadEmbeddedResource(resource))

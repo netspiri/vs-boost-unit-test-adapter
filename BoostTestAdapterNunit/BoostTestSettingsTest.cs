@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Settings;
 using BoostTestAdapter.TestBatch;
@@ -66,7 +68,7 @@ namespace BoostTestAdapterNunit
             Assert.That(settings.WorkingDirectory, Is.Null);
             Assert.That(settings.EnableStdOutRedirection, Is.True);
             Assert.That(settings.EnableStdErrRedirection, Is.True);
-            Assert.That(settings.Filters, Is.EqualTo(TestSourceFilter.Empty));
+            Assert.That(settings.Filters, Is.EqualTo(new TestSourceFilter()));
             Assert.That(settings.RunDisabledTests, Is.False);
             Assert.That(settings.UseBoost162Workaround, Is.False);
             Assert.That(settings.PostTestDelay, Is.EqualTo(0));

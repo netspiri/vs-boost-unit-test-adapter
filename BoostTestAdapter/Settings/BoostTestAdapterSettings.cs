@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
@@ -51,7 +53,7 @@ namespace BoostTestAdapter.Settings
 
             this.EnableStdErrRedirection = true;
 
-            this.Filters = TestSourceFilter.Empty;
+            this.Filters = new TestSourceFilter();
 
             this.RunDisabledTests = false;
 
