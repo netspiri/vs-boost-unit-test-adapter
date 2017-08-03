@@ -165,6 +165,10 @@
       <Project>{488ae1ce-107d-4f5b-9f1f-ed7905d5ce75}</Project>
       <Name>Antlr.DOT</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BoostTestShared\BoostTestShared.csproj">
+      <Project>{678b7c85-7906-46dd-810c-e0ef0121b3b3}</Project>
+      <Name>BoostTestShared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VisualStudio2015Adapter\VisualStudio2015Adapter.csproj">
       <Project>{eb0051e3-1dda-418c-abaf-c1da5339114c}</Project>
       <Name>VisualStudio2015Adapter</Name>
@@ -201,7 +205,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM required for the BoostTestPlugin so that the log4net config file is inlcuded as part of the vsix installation
+    <PostBuildEvent>REM required for the BoostTestPlugin so that the log4net config file is included as part of the vsix installation
 xcopy /c /i /y $(TargetFileName).config ..\..\..\BoostTestPlugin
 REM required by some unit tests in LoggerTest.cs so as to have a certain degree of confidence that log4net is actually logging to file
 xcopy /c /i /y $(TargetFileName).config ..\..\..\BoostTestAdapterNunit
