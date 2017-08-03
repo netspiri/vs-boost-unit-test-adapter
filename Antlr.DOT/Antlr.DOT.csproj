@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Antlr.DOT</RootNamespace>
     <AssemblyName>Antlr.DOT</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,10 +32,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr4.Runtime">
-      <HintPath>lib\Antlr4.Runtime.dll</HintPath>
+    <Reference Include="Antlr4.Runtime, Version=4.5.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.4.5.3\lib\net45\Antlr4.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -40,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DOT.cs" />
+    <Compile Include="DOTBaseListener.cs" />
     <Compile Include="DOTBaseVisitor.cs" />
     <Compile Include="DOTLexer.cs" />
+    <Compile Include="DOTListener.cs" />
     <Compile Include="DOTParser.cs" />
     <Compile Include="DOTVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -50,6 +56,7 @@
     <None Include="DOT.g4" />
     <None Include="DOT.tokens" />
     <None Include="DOTLexer.tokens" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.txt" />
