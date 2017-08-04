@@ -101,6 +101,7 @@
     <ProjectReference Include="..\VisualStudioAdapter\VisualStudioAdapter.csproj">
       <Project>{62347cc7-c839-413d-a7ce-598409f6f15b}</Project>
       <Name>VisualStudioAdapter</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
