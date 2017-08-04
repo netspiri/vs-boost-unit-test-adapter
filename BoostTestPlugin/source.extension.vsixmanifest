@@ -10,7 +10,7 @@ In case of any issues please file an issue at https://github.com/etas/vs-boost-u
         <License>LICENSE_1_0.txt</License>
         <GettingStartedGuide>https://github.com/etas/vs-boost-unit-test-adapter/wiki/User-Manual#usage</GettingStartedGuide>
         <ReleaseNotes>Release Notes.txt</ReleaseNotes>
-        <Icon>boost_test_logoSquare.ico</Icon>
+        <Icon>Icons\Icon.ico</Icon>
         <PreviewImage>Boost_preview.png</PreviewImage>
         <Tags>C++, Unit Testing, Testing, test explorer, TDD, Boost, Boost Test Library, Visual Studio, Test Adapter</Tags>
     </Metadata>
