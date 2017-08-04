@@ -23,35 +23,21 @@ namespace BoostTestPackage
         BoostTestPackageService()
         {
             var dte = (DTE2)Package.GetGlobalService(typeof(EnvDTE.DTE));
-            _visualStudio = new VisualStudio2015Adapter.VisualStudio(dte);
+            _visualStudio = new VisualStudioAdapter.VisualStudio(dte);
         }
 
         #region IBoostTestPackageService
 
-        public string GetEnvironment(string binary)
+        public DebuggingProperties GetDebuggingProperties(string binary)
         {
-            foreach (var project in _visualStudio.Solution.Projects)
+            var debuggingProperties = _visualStudio.GetDebuggingProperties(binary);
+            if (debuggingProperties != null)
             {
-                var configuration = project.ActiveConfiguration;
-
-                if (string.Equals(binary, configuration.PrimaryOutput, StringComparison.Ordinal))
+                return new DebuggingProperties
                 {
-                    return configuration.VSDebugConfiguration.Environment;
-                }
-            }
-            return null;
-        }
-
-        public string GetWorkingDirectory(string binary)
-        {
-            foreach (var project in _visualStudio.Solution.Projects)
-            {
-                var configuration = project.ActiveConfiguration;
-
-                if (string.Equals(binary, configuration.PrimaryOutput, StringComparison.Ordinal))
-                {
-                    return configuration.VSDebugConfiguration.WorkingDirectory;
-                }
+                    Environment = debuggingProperties.Environment,
+                    WorkingDirectory = debuggingProperties.WorkingDirectory
+                };
             }
             return null;
         }

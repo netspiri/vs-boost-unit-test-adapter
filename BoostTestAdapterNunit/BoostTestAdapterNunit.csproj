@@ -102,10 +102,6 @@
       <Project>{678B7C85-7906-46DD-810C-E0EF0121B3B3}</Project>
       <Name>BoostTestShared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VisualStudio2015Adapter\VisualStudio2015Adapter.csproj">
-      <Project>{eb0051e3-1dda-418c-abaf-c1da5339114c}</Project>
-      <Name>VisualStudio2015Adapter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VisualStudioAdapter\VisualStudioAdapter.csproj">
       <Project>{62347cc7-c839-413d-a7ce-598409f6f15b}</Project>
       <Name>VisualStudioAdapter</Name>

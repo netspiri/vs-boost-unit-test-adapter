@@ -3,17 +3,19 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.Linq;
 
 using Microsoft.VisualStudio.VCProjectEngine;
 
-namespace VisualStudioAdapter.Shared
+namespace VisualStudioAdapter
 {
     /// <summary>
     /// Adapter class for a Visual Studio Project Configuration
     /// </summary>
-    public class ProjectConfiguration : IProjectConfiguration
+    class ProjectConfiguration
     {
         private VSDebugConfiguration _configuration = null;
 
@@ -27,21 +29,17 @@ namespace VisualStudioAdapter.Shared
 
             this._configuration = configuration;
 
-            this.PrimaryOutput = this._configuration.VCConfiguration.PrimaryOutput;            
+            this.PrimaryOutput = this._configuration.VCConfiguration.PrimaryOutput;
         }
-
-        #region IProjectConfiguration
 
         public string PrimaryOutput { get; private set; }
        
-        public IVSDebugConfiguration VSDebugConfiguration
+        public VSDebugConfiguration VSDebugConfiguration
         {
             get
             {
                 return _configuration;
-            }            
+            }
         }
-
-        #endregion IProjectConfiguration
     }
 }

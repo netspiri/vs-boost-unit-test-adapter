@@ -153,12 +153,6 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
-    <ProjectReference Include="..\VisualStudio2015Adapter\VisualStudio2015Adapter.csproj">
-      <Project>{eb0051e3-1dda-418c-abaf-c1da5339114c}</Project>
-      <Name>VisualStudio2015Adapter</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
     <ProjectReference Include="..\VisualStudioAdapter\VisualStudioAdapter.csproj">
       <Project>{62347cc7-c839-413d-a7ce-598409f6f15b}</Project>
       <Name>VisualStudioAdapter</Name>

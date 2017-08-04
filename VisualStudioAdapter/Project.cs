@@ -3,15 +3,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using Microsoft.VisualStudio.VCProjectEngine;
 
-namespace VisualStudioAdapter.Shared
+namespace VisualStudioAdapter
 {
     /// <summary>
     /// Adapter for a Visual Studio Project
     /// </summary>
-    public class Project : IProject
+    class Project
     {
         private EnvDTE.Project _project = null;
         private ProjectConfiguration _configuration = null;
@@ -28,11 +30,9 @@ namespace VisualStudioAdapter.Shared
             this.Name = project.FullName;
         }
 
-        #region IProject
-
         public string Name { get; private set; }
 
-        public IProjectConfiguration ActiveConfiguration
+        public ProjectConfiguration ActiveConfiguration
         {
             get
             {
@@ -47,8 +47,6 @@ namespace VisualStudioAdapter.Shared
                 return this._configuration;
             }
         }
-
-        #endregion IProject
 
         /// <summary>
         /// Retrieves the active configuration from the base Visual Studio Project

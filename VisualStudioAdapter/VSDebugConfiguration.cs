@@ -9,12 +9,12 @@ using System;
 
 using Microsoft.VisualStudio.VCProjectEngine;
 
-namespace VisualStudioAdapter.Shared
+namespace VisualStudioAdapter
 {
     /// <summary>
     /// Adapter class for a Visual Studio Project Configuration
     /// </summary>
-    public class VSDebugConfiguration : IVSDebugConfiguration
+    class VSDebugConfiguration
     {
         private VCConfiguration _configuration = null;
 
@@ -40,8 +40,6 @@ namespace VisualStudioAdapter.Shared
             }
         }
 
-        #region IVSConfiguration
-
         /// <summary>
         /// Evaluates 'WorkingDirectory' from Visual Studio Configuration Properties
         /// </summary>
@@ -65,7 +63,5 @@ namespace VisualStudioAdapter.Shared
                 return rule.GetEvaluatedPropertyValue("LocalDebuggerEnvironment");
             }
         }
-
-        #endregion IVSConfiguration
     }
 }

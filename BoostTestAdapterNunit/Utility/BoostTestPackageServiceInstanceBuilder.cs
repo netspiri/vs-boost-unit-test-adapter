@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using FakeItEasy;
-using VisualStudioAdapter;
 using BoostTestShared;
 
 namespace BoostTestAdapterNunit.Utility
@@ -13,8 +11,7 @@ namespace BoostTestAdapterNunit.Utility
     /// </summary>
     class FakeBoostTestPackageServiceInstanceBuilder
     {
-        private string _workingDirectory = string.Empty;
-        private string _environment = string.Empty;
+        private DebuggingProperties _debuggingProperties = new DebuggingProperties();
 
         /// <summary>
         /// Identifies the project's working directory
@@ -23,7 +20,7 @@ namespace BoostTestAdapterNunit.Utility
         /// <returns></returns>
         public FakeBoostTestPackageServiceInstanceBuilder WorkingDirectory(string output)
         {
-            this._workingDirectory = output;
+            this._debuggingProperties.WorkingDirectory = output;
             return this;
         }
 
@@ -34,7 +31,7 @@ namespace BoostTestAdapterNunit.Utility
         /// <returns></returns>
         public FakeBoostTestPackageServiceInstanceBuilder Environment(string output)
         {
-            this._environment = output;
+            this._debuggingProperties.Environment = output;
             return this;
         }
 
@@ -46,8 +43,7 @@ namespace BoostTestAdapterNunit.Utility
         {
             IBoostTestPackageService fake = A.Fake<IBoostTestPackageService>();
 
-            A.CallTo(() => fake.GetEnvironment(A<string>._)).Returns(this._environment);
-            A.CallTo(() => fake.GetWorkingDirectory(A<string>._)).Returns(this._workingDirectory);
+            A.CallTo(() => fake.GetDebuggingProperties(A<string>._)).Returns(this._debuggingProperties);
 
             IBoostTestPackageServiceWrapper fakeWrapper = A.Fake<IBoostTestPackageServiceWrapper>();
 

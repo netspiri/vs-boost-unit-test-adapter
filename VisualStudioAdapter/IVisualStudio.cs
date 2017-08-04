@@ -13,8 +13,11 @@ namespace VisualStudioAdapter
     public interface IVisualStudio
     {
         /// <summary>
-        /// Currently loaded solution.
+        /// Gets the debugging properties configured in the active configuration for the project
+        /// producing the specified binary. May return null if the properties cannot be obtained.
         /// </summary>
-        ISolution Solution { get; }
+        /// <param name="binary">Binary to get the debugging properties for</param>
+        /// <returns>The debugging properties</returns>
+        DebuggingProperties GetDebuggingProperties(string binary);
     }
 }

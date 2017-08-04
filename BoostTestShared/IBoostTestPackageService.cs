@@ -13,22 +13,13 @@ namespace BoostTestShared
     public interface IBoostTestPackageService
     {
         /// <summary>
-        /// Gets the working directory configured in the active configuration for the project
-        /// producing the specified binary.
+        /// Gets the debugging properties configured in the active configuration for the project
+        /// producing the specified binary. May return null if the properties cannot be obtained.
         /// </summary>
-        /// <param name="binary">Binary to get the working directory for</param>
-        /// <returns>The working directory as configured in the debug settings</returns>
+        /// <param name="binary">Binary to get the debugging properties for</param>
+        /// <returns>The debugging properties</returns>
         [OperationContract]
-        string GetWorkingDirectory(string binary);
-
-        /// <summary>
-        /// Gets the environment configured in the active configuration for the project
-        /// producing the specified binary.
-        /// </summary>
-        /// <param name="binary">Binary to get the environment for</param>
-        /// <returns>The environment as configured in the debug settings</returns>
-        [OperationContract]
-        string GetEnvironment(string binary);
+        DebuggingProperties GetDebuggingProperties(string binary);
     }
 
     /// <summary>
