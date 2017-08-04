@@ -174,7 +174,6 @@ namespace BoostTestAdapterNunit
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><UseBoost162Workaround>1</UseBoost162Workaround></BoostTest></RunSettings>", Result = true)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><UseBoost162Workaround>false</UseBoost162Workaround></BoostTest></RunSettings>", Result = false)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><UseBoost162Workaround>0</UseBoost162Workaround></BoostTest></RunSettings>", Result = false)]
-        [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><UseBoost162Workaround /></BoostTest></RunSettings>", Result = false)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest /></RunSettings>", Result = false)]
         public bool ParseWorkaroundOption(string settingsXml)
         {
@@ -189,7 +188,6 @@ namespace BoostTestAdapterNunit
         ///     - Assert that: the 'PostTestDelay' option can be properly parsed
         /// </summary>
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><PostTestDelay>0</PostTestDelay></BoostTest></RunSettings>", Result = 0)]
-        [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><PostTestDelay>-2147483648</PostTestDelay></BoostTest></RunSettings>", Result = -2147483648)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><PostTestDelay>2147483647</PostTestDelay></BoostTest></RunSettings>", Result = 2147483647)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest><PostTestDelay>15</PostTestDelay></BoostTest></RunSettings>", Result = 15)]
         [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><RunSettings><BoostTest /></RunSettings>", Result = 0)]

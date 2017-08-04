@@ -3,14 +3,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml;
-using System.Xml.XPath;
+// This file has been modified by Microsoft on 8/2017.
+
 using BoostTestAdapterNunit.Utility;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace BoostTestAdapterNunit.Fakes
 {
@@ -134,6 +137,14 @@ namespace BoostTestAdapterNunit.Fakes
         {
             this.SettingsXml = settingsXml;
 
+            var xmlSettings = new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Document,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                XmlResolver = null
+            };
+
             // Populate SettingProviders
             using (StringReader reader = new StringReader(this.SettingsXml))
             {
@@ -144,7 +155,8 @@ namespace BoostTestAdapterNunit.Fakes
                 {
                     if (this.SettingProviders.ContainsKey(child.LocalName))
                     {
-                        this.SettingProviders[child.LocalName].Load(child.ReadSubtree());
+                        var xmlReader = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(child.OuterXml)), xmlSettings);
+                        this.SettingProviders[child.LocalName].Load(xmlReader);
                     }
                 }
             }

@@ -159,6 +159,10 @@
     <Compile Include="Utility\XmlReaderHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BoostTestAdapterSettings.xsd">
+      <SubType>Designer</SubType>
+      <LogicalName>BoostTestAdapterSettings.xsd</LogicalName>
+    </EmbeddedResource>
     <ProjectReference Include="..\Antlr.DOT\Antlr.DOT.csproj">
       <Project>{488ae1ce-107d-4f5b-9f1f-ed7905d5ce75}</Project>
       <Name>Antlr.DOT</Name>

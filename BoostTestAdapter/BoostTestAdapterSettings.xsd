@@ -1,0 +1,95 @@
+﻿<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="BoostTest" type="BoostTestType" />
+
+  <xsd:complexType name="BoostTestType">
+    <xsd:all>
+      <xsd:element name="ExecutionTimeoutMilliseconds" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="-1" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DiscoveryTimeoutMilliseconds" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="FailTestOnMemoryLeak" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="LogLevel" minOccurs="0" type="LogLevelType" />
+      <xsd:element name="CatchSystemErrors" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="DetectFloatingPointExceptions" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="ExternalTestRunner" minOccurs="0" type="ExternalBoostTestRunnerSettingsType" />
+      <xsd:element name="TestBatchStrategy" minOccurs="0" type="TestBatchStrategyType" />
+      <xsd:element name="ForceListContent" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="WorkingDirectory" minOccurs="0" type="xsd:string" />
+      <xsd:element name="EnableStdOutRedirection" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="EnableStdErrRedirection" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="Filters" minOccurs="0" type="TestSourceFilterType" />
+      <xsd:element name="UseBoost162Workaround" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="RunDisabledTests" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="PostTestDelay" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:simpleType name="LogLevelType" final="restriction">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="All" />
+      <xsd:enumeration value="Success" />
+      <xsd:enumeration value="TestSuite" />
+      <xsd:enumeration value="Message" />
+      <xsd:enumeration value="Warning" />
+      <xsd:enumeration value="Error" />
+      <xsd:enumeration value="CppException" />
+      <xsd:enumeration value="SystemError" />
+      <xsd:enumeration value="FatalError" />
+      <xsd:enumeration value="Nothing" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="TestBatchStrategyType" final="restriction">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="Source" />
+      <xsd:enumeration value="TestSuite" />
+      <xsd:enumeration value="TestCase" />
+      <xsd:enumeration value="One" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="ExternalBoostTestRunnerSettingsType">
+    <xsd:all>
+      <xsd:element name="DiscoveryMethodType" minOccurs="0" type="DiscoveryMethodTypeType" />
+      <xsd:element name="ExecutionCommandLine" minOccurs="0" type="xsd:string" />
+    </xsd:all>
+    <xsd:attribute name="type" type="xsd:string" />
+  </xsd:complexType>
+
+  <xsd:simpleType name="DiscoveryMethodTypeType" final="restriction">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="DiscoveryListContent" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="TestSourceFilterType">
+    <xsd:all>
+      <xsd:element name="Include" minOccurs="0" type="PatternList" />
+      <xsd:element name="Exclude" minOccurs="0" type="PatternList" />
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="PatternList">
+    <xsd:sequence>
+      <xsd:element name="Pattern" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

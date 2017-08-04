@@ -896,16 +896,16 @@ namespace BoostTestAdapterNunit
         }
 
         /// <summary>
-        /// Given a .runsettings which has 'BatchTestRuns' as false (or left unspecified), tests should individually, one process invocation per test case.
+        /// Given a .runsettings which has 'TestBatchStrategy' as 'TestCase', tests should individually, one process invocation per test case.
         /// 
         /// Test aims:
-        ///     - Ensure that test modules are executed individually if 'BatchTestRuns' is set to false
+        ///     - Ensure that test modules are executed individually if 'TestBatchStrategy' is set to 'TestCase'
         /// </summary>
         [Test]
         public void TestIndividualTestExecutionRuns()
         {
             this.RunContext.RegisterSettingProvider(BoostTestAdapterSettings.XmlRootName, new BoostTestAdapterSettingsProvider());
-            this.RunContext.LoadSettings("<RunSettings><BoostTest><BatchTestRuns>false</BatchTestRuns></BoostTest></RunSettings>");
+            this.RunContext.LoadSettings("<RunSettings><BoostTest><TestBatchStrategy>TestCase</TestBatchStrategy></BoostTest></RunSettings>");
 
             VSTestCase[] testCases = new VSTestCase[]
             {
@@ -947,10 +947,10 @@ namespace BoostTestAdapterNunit
         }
 
         /// <summary>
-        /// Given a .runsettings which specifies 'BatchTestRuns', tests should execute as usual but in the least amount of processed runs.
+        /// Given a .runsettings which specifies 'TestBatchStrategy', tests should execute as usual but in the least amount of processed runs.
         /// 
         /// Test aims:
-        ///     - Ensure that test modules are executed once if 'BatchTestRuns' is true and 'Run All...' is triggered
+        ///     - Ensure that test modules are executed once if 'TestBatchStrategy' is 'Source' and 'Run All...' is triggered
         /// </summary>
         [Test]
         public void TestModuleBatchedRuns()
