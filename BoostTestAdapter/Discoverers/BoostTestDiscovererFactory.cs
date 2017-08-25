@@ -7,32 +7,23 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 using BoostTestAdapter.Discoverers;
 using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Settings;
+using BoostTestAdapter.Utility.VisualStudio;
 
 namespace BoostTestAdapter
 {
     class BoostTestDiscovererFactory : IBoostTestDiscovererFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// Default 'ForceListContent' filename pattern. Such filenames are assumed to be valid Boost.Test modules by default.
-        /// </summary>
-        private static readonly Regex _forceListContentExtensionPattern = new Regex(@"test\.boost(?:d)?\.exe$", RegexOptions.IgnoreCase);
-        
-        #endregion 
-
         #region Constructors
 
         /// <summary>
         /// Default constructor. The default implementation of IBoostTestRunnerFactory is provided.
         /// </summary>
         public BoostTestDiscovererFactory()
-            : this(new DefaultBoostTestRunnerFactory())
+            : this(new CachingBoostTestRunnerFactory(new DefaultBoostTestRunnerFactory()), new DefaultBoostTestPackageServiceFactory())
         {
         }
 
@@ -40,9 +31,11 @@ namespace BoostTestAdapter
         /// Constructor.
         /// </summary>
         /// <param name="factory">A custom IBoostTestRunnerFactory implementation.</param>
-        public BoostTestDiscovererFactory(IBoostTestRunnerFactory factory)
+        /// <param name="packageServiceFactory">A custom implementation of IBoostTestPackageServiceFactory</param>
+        public BoostTestDiscovererFactory(IBoostTestRunnerFactory factory, IBoostTestPackageServiceFactory provider)
         {
             _factory = factory;
+            _boostTestPackage = provider;
         }
 
         #endregion
@@ -50,6 +43,7 @@ namespace BoostTestAdapter
         #region Members
 
         private readonly IBoostTestRunnerFactory _factory;
+        private readonly IBoostTestPackageServiceFactory _boostTestPackage;
 
         #endregion
 
@@ -92,13 +86,13 @@ namespace BoostTestAdapter
                 }
 
                 // Skip modules which are not .exe
-                if (string.Compare(extension, BoostTestDiscoverer.ExeExtension, true) != 0)
+                if (string.Compare(extension, BoostTestDiscoverer.ExeExtension, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     continue;
                 }
 
                 // Ensure that the source is a Boost.Test module if it supports '--list_content'
-                if (((settings.ForceListContent) || IsListContentSupported(source, settings)))
+                if (IsListContentSupported(source, settings))
                 {
                     listContentDiscovererSources.Add(source);
                 }
@@ -116,7 +110,7 @@ namespace BoostTestAdapter
             if (listContentDiscovererSources.Any())
                 discoverers.Add(new FactoryResult()
                 {
-                    Discoverer = new ListContentDiscoverer(),
+                    Discoverer = new ListContentDiscoverer(_factory, _boostTestPackage),
                     Sources = listContentDiscovererSources
                 });
      
@@ -133,15 +127,9 @@ namespace BoostTestAdapter
         /// <returns>true if the source has list content capabilities; false otherwise</returns>
         private bool IsListContentSupported(string source, BoostTestAdapterSettings settings)
         {
-            BoostTestRunnerFactoryOptions options = new BoostTestRunnerFactoryOptions()
-            {
-                ExternalTestRunnerSettings = settings.ExternalTestRunner
-            };
+            var runner = _factory.GetRunner(source, settings.TestRunnerFactoryOptions);
 
-            IBoostTestRunner runner = _factory.GetRunner(source, options);
-
-            // Convention over configuration. Assume test runners utilising such an extension pattern
-            return (runner != null) && (_forceListContentExtensionPattern.IsMatch(source) || runner.ListContentSupported);
+            return (runner != null) && (runner.Capabilities.ListContent);
         }
     }
 }

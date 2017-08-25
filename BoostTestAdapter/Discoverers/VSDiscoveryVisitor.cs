@@ -85,7 +85,7 @@ namespace BoostTestAdapter.Discoverers
                 {
                     // NOTE Since we have asserted that the suite is a BOOST_DATA_TEST_CASE,
                     //      all child instances are to be of type TestCase
-                    
+
                     var displayName = testSuite.Name + '/' + child.Name;
                     Visit((TestCase)child, displayName);
                 }

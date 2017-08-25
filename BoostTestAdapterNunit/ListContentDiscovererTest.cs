@@ -65,7 +65,7 @@ namespace BoostTestAdapterNunit
         }
 
         #endregion Helper Methods
-        
+
         /// <summary>
         /// List content discovery
         /// 
@@ -79,8 +79,7 @@ namespace BoostTestAdapterNunit
 
             string output = null;
 
-            A.CallTo(() => runner.ListContentSupported).Returns(true);
-            A.CallTo(() => runner.VersionSupported).Returns(false);
+            A.CallTo(() => runner.Capabilities).Returns(new BoostTestRunnerCapabilities { ListContent = true, Version = false });
             A.CallTo(() => runner.Execute(A<BoostTestRunnerCommandLineArgs>._, A<BoostTestRunnerSettings>._, A<IProcessExecutionContext>._)).Invokes((call) =>
             {
                 BoostTestRunnerCommandLineArgs args = (BoostTestRunnerCommandLineArgs) call.Arguments.First();
@@ -137,9 +136,8 @@ namespace BoostTestAdapterNunit
         public void FailingExitCode()
         {
             IBoostTestRunner runner = A.Fake<IBoostTestRunner>();
-                        
-            A.CallTo(() => runner.ListContentSupported).Returns(true);
-            A.CallTo(() => runner.VersionSupported).Returns(false);
+
+            A.CallTo(() => runner.Capabilities).Returns(new BoostTestRunnerCapabilities { ListContent = true, Version = false });
             A.CallTo(() => runner.Execute(A<BoostTestRunnerCommandLineArgs>._, A<BoostTestRunnerSettings>._, A<IProcessExecutionContext>._)).Returns(-1073741515);
 
             FakeBoostTestRunnerFactory factory = new FakeBoostTestRunnerFactory(runner);
@@ -162,8 +160,7 @@ namespace BoostTestAdapterNunit
         {
             IBoostTestRunner runner = A.Fake<IBoostTestRunner>();
 
-            A.CallTo(() => runner.ListContentSupported).Returns(true);
-            A.CallTo(() => runner.VersionSupported).Returns(true);
+            A.CallTo(() => runner.Capabilities).Returns(new BoostTestRunnerCapabilities { ListContent = true, Version = true });
             A.CallTo(() => runner.Execute(A<BoostTestRunnerCommandLineArgs>._, A<BoostTestRunnerSettings>._, A<IProcessExecutionContext>._)).Invokes((call) =>
             {
                 BoostTestRunnerCommandLineArgs args = (BoostTestRunnerCommandLineArgs) call.Arguments.First();
@@ -207,8 +204,7 @@ namespace BoostTestAdapterNunit
         {
             IBoostTestRunner runner = A.Fake<IBoostTestRunner>();
 
-            A.CallTo(() => runner.ListContentSupported).Returns(true);
-            A.CallTo(() => runner.VersionSupported).Returns(false);
+            A.CallTo(() => runner.Capabilities).Returns(new BoostTestRunnerCapabilities { ListContent = true, Version = false });
             A.CallTo(() => runner.Execute(A<BoostTestRunnerCommandLineArgs>._, A<BoostTestRunnerSettings>._, A<IProcessExecutionContext>._)).Invokes((call) =>
             {
                 BoostTestRunnerCommandLineArgs args = (BoostTestRunnerCommandLineArgs)call.Arguments.First();

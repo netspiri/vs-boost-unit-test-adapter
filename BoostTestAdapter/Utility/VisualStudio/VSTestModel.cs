@@ -48,19 +48,11 @@ namespace BoostTestAdapter.Utility.VisualStudio
             }
         }
 
-        private static readonly TestProperty _version = TestProperty.Register("Boost.Test.Boost.Version", "Boost Version", typeof(string), typeof(VSTestModel));
-
         /// <summary>
         /// Boost.Test Boost Version property
         /// </summary>
-        public static TestProperty VersionProperty
-        {
-            get
-            {
-                return _version;
-            }
-        }
-        
+        public static TestProperty VersionProperty { get; } = TestProperty.Register("Boost.Test.Boost.Version", "Boost Version", typeof(string), typeof(VSTestModel));
+
         /// <summary>
         /// Converts forward slashes in a file path to backward slashes.
         /// </summary>

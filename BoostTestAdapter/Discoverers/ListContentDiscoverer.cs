@@ -34,7 +34,7 @@ namespace BoostTestAdapter.Discoverers
             : this(new DefaultBoostTestRunnerFactory(), new DefaultBoostTestPackageServiceFactory())
         {
         }
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -69,7 +69,7 @@ namespace BoostTestAdapter.Discoverers
         {
             Code.Require(sources, "sources");
             Code.Require(discoverySink, "discoverySink");
-
+            
             // Populate loop-invariant attributes and settings
 
             BoostTestAdapterSettings settings = BoostTestAdapterSettingsProvider.GetSettings(discoveryContext);
@@ -109,9 +109,12 @@ namespace BoostTestAdapter.Discoverers
 
                         int resultCode = EXIT_SUCCESS;
 
-                        using (var context = new DefaultProcessExecutionContext())
+                        using (new Utility.TimedScope("Execute \"--list_content=DOT\" for \"{0}\"", source))
                         {
-                            resultCode = runner.Execute(args, runnerSettings, context);
+                            using (var context = new DefaultProcessExecutionContext())
+                            {
+                                resultCode = runner.Execute(args, runnerSettings, context);
+                            }
                         }
 
                         // Skip sources for which the --list_content file is not available
@@ -129,16 +132,29 @@ namespace BoostTestAdapter.Discoverers
                         }
                         
                         // Parse --list_content=DOT output
-                        using (var stream = File.OpenRead(args.StandardErrorFile))
-                        using (var reader = new StreamReader(stream, System.Text.Encoding.Default))
+                        Stream stream = null;
+                        try
                         {
-                            TestFrameworkDOTDeserialiser deserialiser = new TestFrameworkDOTDeserialiser(source);
-                            TestFramework framework = deserialiser.Deserialise(reader);
-                            if ((framework != null) && (framework.MasterTestSuite != null))
+                            stream = File.OpenRead(args.StandardErrorFile);
+                            using (var reader = new StreamReader(stream, System.Text.Encoding.Default))
                             {
-                                framework.MasterTestSuite.Apply(new VSDiscoveryVisitor(source, GetVersion(runner), discoverySink));
+                                stream = null;
+
+                                TestFrameworkDOTDeserialiser deserialiser = new TestFrameworkDOTDeserialiser(source);
+                                TestFramework framework = deserialiser.Deserialise(reader);
+                                if ((framework != null) && (framework.MasterTestSuite != null))
+                                {
+                                    framework.MasterTestSuite.Apply(new VSDiscoveryVisitor(source, GetVersion(runner), discoverySink));
+                                }
                             }
                         }
+                        finally
+                        {
+                            if (stream != null)
+                            {
+                                stream.Dispose();
+                            }
+                        }                        
                     }
                 }
                 catch (Exception ex)
@@ -147,7 +163,7 @@ namespace BoostTestAdapter.Discoverers
                 }
             }
         }
-
+        
         /// <summary>
         /// Regular expression pattern for extracting Boost version from Boost.Test --version output
         /// </summary>
@@ -160,7 +176,7 @@ namespace BoostTestAdapter.Discoverers
         /// <returns>The Boost version of the Boost.Test module or the empty string if the version cannot be retrieved</returns>
         private static string GetVersion(IBoostTestRunner runner)
         {
-            if (!runner.VersionSupported)
+            if (!runner.Capabilities.Version)
             {
                 return string.Empty;
             }
