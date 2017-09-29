@@ -19,6 +19,7 @@ before_build:
   - ps: |
       $revision = $env:APPVEYOR_BUILD_NUMBER
 
+      Vsix-IncrementVsixVersion .\BoostTestPackage\source.extension.vsixmanifest $revision revision
       Vsix-IncrementVsixVersion .\BoostTestPlugin\source.extension.vsixmanifest $revision revision | Vsix-UpdateBuildVersion -updateOnPullRequests
 build:
   verbosity: minimal

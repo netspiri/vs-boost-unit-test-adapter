@@ -86,7 +86,6 @@
     <Compile Include="Utility\BoostTestPackageServiceInstanceBuilder.cs" />
     <Compile Include="Utility\FrameworkEqualityVisitor.cs" />
     <Compile Include="Utility\TestHelper.cs" />
-    <Compile Include="Utility\VisualStudioInstanceBuilders.cs" />
     <Compile Include="VSDiscoveryVisitorTest.cs" />
     <Compile Include="VSTestModelTest.cs" />
   </ItemGroup>
