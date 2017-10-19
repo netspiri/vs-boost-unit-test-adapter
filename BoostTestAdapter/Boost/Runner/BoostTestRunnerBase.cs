@@ -7,11 +7,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using BoostTestAdapter.Utility;
-using System.ComponentModel;
 using BoostTestAdapter.Utility.ExecutionContext;
 
 namespace BoostTestAdapter.Boost.Runner
@@ -242,50 +242,66 @@ namespace BoostTestAdapter.Boost.Runner
         }
 
         /// <summary>
-        /// Acquires the Boost.Test runner's capabilities via debug symbol lookup
+        /// Boost.Test 'strings' for '--list_content' which are encoded in a Boost.Test runner/executable
+        /// </summary>
+        private static readonly ByteUtilities.BoyerMooreBytePattern[] list_content_markers = new []
+        {
+            // Help text
+            new ByteUtilities.BoyerMooreBytePattern("Lists the content of test tree - names of all test suites and test cases.", System.Text.Encoding.ASCII),
+             // Environment Variable
+            new ByteUtilities.BoyerMooreBytePattern("BOOST_TEST_LIST_CONTENT", System.Text.Encoding.ASCII),
+            // Command-line argument
+            new ByteUtilities.BoyerMooreBytePattern("list_content", System.Text.Encoding.ASCII)
+        };
+
+        /// <summary>
+        /// Boost.Test 'strings' for '--version' which are encoded in a Boost.Test runner/executable
+        /// </summary>
+        private static readonly ByteUtilities.BoyerMooreBytePattern[] version_markers = new[]
+        {
+            // Help text
+            new ByteUtilities.BoyerMooreBytePattern("Prints Boost.Test version and exits.", System.Text.Encoding.ASCII)
+        };
+
+        /// <summary>
+        /// Acquires the Boost.Test runner's capabilities by looking up markers from the test module
         /// </summary>
         /// <returns>The Boost.Test runner's capabilities</returns>
         private BoostTestRunnerCapabilities GetCapabilities()
         {
-            using (new Utility.TimedScope("Looking up '--list_content' and '--version' debug symbols"))
+            using (new Utility.TimedScope("Looking up '--list_content' and '--version' via Boyer-Moore string search"))
             {
+                var listContent = true;
+
                 // Search symbols on the TestRunner not on the source. Source could be .dll which may not contain list_content functionality.
                 using (DebugHelper dbgHelp = CreateDebugHelper(this.TestRunnerExecutable))
                 {
                     if (dbgHelp != null)
                     {
-                        // Restrict symbol search to namespace scope to improve lookup speeds
-                        var symbols = dbgHelp.LookupSymbolNamesByPattern("boost::unit_test::runtime_config::*");
-
-                        // Try to locate the list_content function debug symbol. If this is not available, this implies that:
-                        // - Debug symbols are not available for the requested source
-                        // - Debug symbols are available but the source is not a Boost Unit Test version >= 3 module
-                        var listContent = DebugHelper.FindImport(this.TestRunnerExecutable, "boost_unit_test_framework", StringComparison.OrdinalIgnoreCase) // Boost linked dynamically
-                            || symbols.Any(symbol =>
-                                   (symbol == "boost::unit_test::runtime_config::LIST_CONTENT") ||     // Boost 1.60 - Boost 1.63
-                                   (symbol == "boost::unit_test::runtime_config::btrt_list_content")   // Boost 1.64 - Boost 1.65
-                               );
-
-                        if (!listContent)
-                        {
-                            Logger.Warn(Resources.CouldNotLocateDebugSymbols, this.TestRunnerExecutable);
-                        }
-
-                        // Don't bother checking for the '--version' symbol if '--list_content' is not available
-                        var version = listContent && symbols.Any(symbol =>
-                            (symbol == "boost::unit_test::runtime_config::VERSION") ||          // Boost 1.63
-                            (symbol == "boost::unit_test::runtime_config::btrt_version")        // Boost 1.64 - Boost 1.65
-                        );
-
-                        return new BoostTestRunnerCapabilities {
-                            ListContent = listContent,
-                            Version = version
-                        };
+                        listContent = DebugHelper.FindImport(this.TestRunnerExecutable, "boost_unit_test_framework", StringComparison.OrdinalIgnoreCase);
                     }
                 }
-            }
 
-            return null;
+                var buffer = System.IO.File.ReadAllBytes(this.TestRunnerExecutable);
+
+                // At least 3 markers need to be available to ensure that the test module is
+                // a Boost.Test runner with '--list_content' capabilities
+                listContent = listContent || list_content_markers.Select(marker => buffer.IndexOf(marker)).All(index => index >= 0);
+                
+                if (!listContent)
+                {
+                    Logger.Warn(Resources.CouldNotLocateDebugSymbols, this.TestRunnerExecutable);
+                }
+
+                // Don't bother checking for the '--version' symbol if '--list_content' is not available
+                var version = listContent && version_markers.Select(marker => buffer.IndexOf(marker)).All(index => index >= 0);
+
+                return new BoostTestRunnerCapabilities
+                {
+                    ListContent = listContent,
+                    Version = version
+                };
+            }
         }
 
         /// <summary>
