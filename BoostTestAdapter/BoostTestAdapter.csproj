@@ -129,6 +129,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\BoostTestInternalSettings.cs" />
     <Compile Include="Utility\BoostDataTestCaseVerifier.cs" />
     <Compile Include="Utility\VisualStudio\DefaultBoostTestPackageServiceFactory.cs" />
     <Compile Include="Utility\VisualStudio\IBoostTestPackageServiceFactory.cs" />
@@ -171,6 +172,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="BoostTestInternalSettings.xsd">
+      <SubType>Designer</SubType>
+      <LogicalName>BoostTestInternalSettings.xsd</LogicalName>
+    </EmbeddedResource>
     <ProjectReference Include="..\Antlr.DOT\Antlr.DOT.csproj">
       <Project>{488ae1ce-107d-4f5b-9f1f-ed7905d5ce75}</Project>
       <Name>Antlr.DOT</Name>
@@ -187,6 +192,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel">
       <Version>15.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
+      <Version>11.0.61030</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

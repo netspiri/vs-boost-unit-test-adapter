@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This file has been modified by Microsoft on 8/2017.
+// This file has been modified by Microsoft on 4/2018.
 
 using BoostTestAdapter.Utility.VisualStudio;
 using BoostTestShared;
@@ -29,7 +29,7 @@ namespace BoostTestAdapterNunit.Utility
 
         private IBoostTestPackageServiceWrapper PackageService { get; set; }
 
-        public IBoostTestPackageServiceWrapper Create()
+        public IBoostTestPackageServiceWrapper Create(int processId)
         {
             return PackageService;
         }

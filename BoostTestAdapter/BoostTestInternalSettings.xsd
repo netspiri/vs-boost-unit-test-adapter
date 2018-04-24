@@ -1,0 +1,17 @@
+﻿<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  
+  <xsd:element name="BoostTestInternalSettings" type="BoostTestInternalSettingsType" />
+
+  <xsd:complexType name="BoostTestInternalSettingsType">
+    <xsd:all>
+      <xsd:element name="VSProcessId" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="-1" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:all>
+  </xsd:complexType>
+  
+</xsd:schema>

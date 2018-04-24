@@ -14,6 +14,6 @@ namespace BoostTestAdapter.Utility.VisualStudio
         /// Creates an IBoostTestPackageServiceWrapper instance.
         /// </summary>
         /// <returns></returns>
-        IBoostTestPackageServiceWrapper Create();
+        IBoostTestPackageServiceWrapper Create(int processId);
     }
 }

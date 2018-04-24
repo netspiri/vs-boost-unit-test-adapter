@@ -3,13 +3,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This file has been modified by Microsoft on 8/2017.
+// This file has been modified by Microsoft on 4/2018.
 
+using BoostTestAdapter.Boost.Runner;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using BoostTestAdapter.Boost.Runner;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace BoostTestAdapter.Settings
 {
@@ -60,6 +60,8 @@ namespace BoostTestAdapter.Settings
             this.TestRunnerFactoryOptions = new BoostTestRunnerFactoryOptions();
 
             this.PostTestDelay = 0;
+
+            this.ParentVSProcessId = -1;
         }
 
         #region Properties
@@ -235,6 +237,12 @@ namespace BoostTestAdapter.Settings
         /// </summary>
         [XmlIgnore]
         public BoostTestRunnerFactoryOptions TestRunnerFactoryOptions { get; private set; }
+
+        /// <summary>
+        /// The process id of the parent Visual Studio instance. This is set later as we need it from another provider.
+        /// </summary>
+        [XmlIgnore]
+        public int ParentVSProcessId { get; set; }
 
         #endregion Properties
 

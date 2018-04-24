@@ -66,7 +66,7 @@ namespace BoostTestAdapter.Discoverers
             // Populate loop-invariant attributes and settings
 
             BoostTestAdapterSettings settings = BoostTestAdapterSettingsProvider.GetSettings(discoveryContext);
-            
+
             BoostTestRunnerSettings runnerSettings = new BoostTestRunnerSettings()
             {
                 Timeout = settings.DiscoveryTimeoutMilliseconds
@@ -81,14 +81,14 @@ namespace BoostTestAdapter.Discoverers
             {
                 try
                 {
-                    using (var packageService = _packageServiceFactory.Create())
+                    using (var packageService = _packageServiceFactory.Create(settings.ParentVSProcessId))
                     {
                         args.SetWorkingEnvironment(source, settings, packageService);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Exception(ex, Resources.WorkingDirectoryNotFound);
+                    Logger.Debug(Resources.WorkingDirectoryNotFoundEx, ex.Message);
                 }
 
                 try
