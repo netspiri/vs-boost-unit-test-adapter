@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This file has been modified by Microsoft on 8/2017.
+// This file has been modified by Microsoft on 5/2018.
 
 using BoostTestAdapter.Boost.Runner;
 using BoostTestAdapter.Settings;
@@ -54,12 +54,34 @@ namespace BoostTestAdapter.Utility
             // Default working directory
             args.WorkingDirectory = Path.GetDirectoryName(source);
 
+            if (settings.TestProperties != null)
+            {
+                var normalizedSource = source.Replace('/', '\\');
+
+                foreach (var test in settings.TestProperties)
+                {
+                    var normalizedCommand = test.Command.Replace('/', '\\');
+                    if (normalizedCommand.Equals(normalizedSource, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var environment = string.Empty;
+                        foreach (var v in test.Environment)
+                        {
+                            environment += $"{v.Name}={v.Value}\n";
+                        }
+
+                        args.SetEnvironment(environment);
+                        args.WorkingDirectory = test.WorkingDirectory;
+                        break;
+                    }
+                }
+            }
+
             // Working directory extracted from test settings
             if (!string.IsNullOrEmpty(settings.WorkingDirectory) && Directory.Exists(settings.WorkingDirectory))
             {
                 args.WorkingDirectory = settings.WorkingDirectory;
             }
-
+            
             // Visual Studio configuration (if available) has higher priority over settings
             var debuggingProperties = packageService?.Service.GetDebuggingPropertiesAsync(source).Result;
             if (debuggingProperties != null)

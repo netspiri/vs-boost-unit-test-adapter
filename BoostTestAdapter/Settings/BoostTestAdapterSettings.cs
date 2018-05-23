@@ -3,10 +3,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This file has been modified by Microsoft on 4/2018.
+// This file has been modified by Microsoft on 5/2018.
 
 using BoostTestAdapter.Boost.Runner;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
@@ -243,6 +244,12 @@ namespace BoostTestAdapter.Settings
         /// </summary>
         [XmlIgnore]
         public int ParentVSProcessId { get; set; }
+
+        /// <summary>
+        /// Test property settings that we need to apply to the associated tests.
+        /// </summary>
+        [XmlIgnore]
+        public List<TestPropertySettingsContainer.TestProperties> TestProperties { get; set; }
 
         #endregion Properties
 
