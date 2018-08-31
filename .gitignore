@@ -218,3 +218,8 @@ FakesAssemblies/
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
+
+# Test Adapter for Boost.Test
+
+NuGetPackages/
+out/
