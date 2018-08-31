@@ -87,9 +87,6 @@ namespace BoostTestAdapterNunit
                 Assert.That(File.Exists(logFile.Path), Is.True);
 
                 string logFileContents = File.ReadAllText(logFile.Path);
-
-                //check that the logger initialization message exists in file and is of type informational
-                Assert.That(Regex.IsMatch(logFileContents, @"INFO(.+)Logger initialized", RegexOptions.IgnoreCase), Is.True, "Failed to find logger initialization message in log file");
                 
                 //check that the informational test message exists and has the expected contents
                 Assert.That(Regex.IsMatch(logFileContents, @"INFO(.+)This is an informational type test message", RegexOptions.IgnoreCase), Is.True, "Failed to find informational type test message in log file");
