@@ -46,14 +46,14 @@ namespace BoostTestAdapter.Boost.Runner
 
         #region IBoostTestRunner
 
-        public virtual void Execute(BoostTestRunnerCommandLineArgs args, BoostTestRunnerSettings settings, IProcessExecutionContext executionContext)
+        public virtual int Execute(BoostTestRunnerCommandLineArgs args, BoostTestRunnerSettings settings, IProcessExecutionContext executionContext)
         {
             Utility.Code.Require(settings, "settings");
             Utility.Code.Require(executionContext, "executionContext");
 
             using (Process process = executionContext.LaunchProcess(GetExecutionContextArgs(args, settings)))
             {
-                MonitorProcess(process, settings.Timeout);
+                return MonitorProcess(process, settings.Timeout);
             }
         }
         
@@ -125,7 +125,7 @@ namespace BoostTestAdapter.Boost.Runner
         /// <param name="process">The process to monitor.</param>
         /// <param name="timeout">The timeout threshold until the process and its children should be killed.</param>
         /// <exception cref="TimeoutException">Thrown in case specified timeout threshold is exceeded.</exception>
-        private static void MonitorProcess(Process process, int timeout)
+        private static int MonitorProcess(Process process, int timeout)
         {
             process.WaitForExit(timeout);
 
@@ -135,6 +135,8 @@ namespace BoostTestAdapter.Boost.Runner
 
                 throw new TimeoutException(timeout);
             }
+
+            return process.ExitCode;
         }
         
         /// <summary>

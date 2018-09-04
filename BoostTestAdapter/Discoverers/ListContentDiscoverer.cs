@@ -47,6 +47,12 @@ namespace BoostTestAdapter.Discoverers
 
         #endregion
 
+        #region Constants
+
+        private const int EXIT_SUCCESS = 0;
+
+        #endregion
+
         #region Members
 
         private readonly IBoostTestRunnerFactory _runnerFactory;
@@ -100,9 +106,11 @@ namespace BoostTestAdapter.Discoverers
                         args.StandardErrorFile = output.Path;
                         Logger.Debug(Resources.ListContentsFile, args.StandardErrorFile);
 
+                        int resultCode = EXIT_SUCCESS;
+
                         using (var context = new DefaultProcessExecutionContext())
-                        { 
-                            runner.Execute(args, runnerSettings, context);
+                        {
+                            resultCode = runner.Execute(args, runnerSettings, context);
                         }
 
                         // Skip sources for which the --list_content file is not available
@@ -112,6 +120,13 @@ namespace BoostTestAdapter.Discoverers
                             continue;
                         }
 
+                        // If the executable failed to exit with an EXIT_SUCCESS code, skip source and notify user accordingly
+                        if (resultCode != EXIT_SUCCESS)
+                        {
+                            Logger.Error(Resources.ListContentProcessFailure, source, resultCode);
+                            continue;
+                        }
+                        
                         // Parse --list_content=DOT output
                         using (var stream = File.OpenRead(args.StandardErrorFile))
                         using (var reader = new StreamReader(stream, System.Text.Encoding.Default))

@@ -313,4 +313,9 @@
   <data name="ImageDirectoryEntryToData" xml:space="preserve">
     <value>ImageDirectoryEntryToData failed!</value>
   </data>
+  <data name="ListContentProcessFailure" xml:space="preserve">
+    <value>--list_content=DOT for {0} failed with exit code {1}. Skipping.</value>
+    <comment>{0} represents a file path
+{1} represents a numeric process error code</comment>
+  </data>
 </root>
