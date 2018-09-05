@@ -1,33 +1,35 @@
-# AppVeyor version is just a placeholder. Version is retrieved from source.extension.vsixmanifest and is automatically updated on build.
-version: '0.0.0.{build}'
-os: Windows Server 2012 R2
+# AppVeyor version is just a placeholder. Version is retrieved from version.txt and is automatically updated on build.
+version: '0.0.0.0.{build}'
+image:
+- Visual Studio 2017
 clone_depth: 5
 install:
-# Download and execute madskristensen AppVeyor VSIX ExtensionScripts in order to update revision number before project build
-  - ps: (New-Object System.Net.WebClient).DownloadString("https://raw.githubusercontent.com/netspiri/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+# Install NuGet package dependencies for proper compilation
+  - cmd: |
+      nuget install
+      nuget restore BoostTestAdapter.sln
 cache:
-# Retain NuGet packages unless packages.config is not updated to possibly minimize subsequent build times
-  - packages -> **\packages.config
+# Retain NuGet packages unless configuration is updated to possibly minimize subsequent build times
+  - NuGetPackages -> NuGet.config, packages.config
 configuration:
   - Debug
   - Release
 before_build:
-# Restore NuGet package dependencies for proper compilation
-  - cmd: nuget restore
-# Updates the version number in the .vsixmanifest and updates the AppVeyor build number to match
-# If the build is triggered due to a tag, version number is not incremented.
+# Updates the version number in the respective files and updates the AppVeyor build number to match
   - ps: |
-      $revision = $env:APPVEYOR_BUILD_NUMBER
-
-      Vsix-IncrementVsixVersion .\BoostTestPlugin\source.extension.vsixmanifest $revision revision | Vsix-UpdateBuildVersion -updateOnPullRequests
+      $version = Get-Content version.txt -Raw
+      .\SetVersion.ps1 $version
+      Update-AppveyorBuild -Version "$version.$env:APPVEYOR_BUILD_NUMBER"
 build:
+  parallel: true
+  project: BoostTestAdapter.sln
   verbosity: minimal
 test:
   assemblies:
-    - BoostTestAdapterNunit\bin\$(configuration)\BoostTestAdapterNunit.dll
-    - VisualStudioAdapterNunit\bin\$(configuration)\VisualStudioAdapterNunit.dll
+    - out\binaries\$(configuration)\BoostTestAdapterNunit\BoostTestAdapterNunit.dll
 artifacts:
-  - path: BoostTestPlugin\bin\$(configuration)\BoostUnitTestAdapter.vsix
+  - path: out\binaries\$(configuration)\BoostTestPlugin\BoostUnitTestAdapter.vsix
+    name: Test Adapter for Boost.Test VSIX Installer
 on_failure:
   - cmd: mkdir C:\logs
 # Retain all environment variables which are currently specified
