@@ -65,6 +65,17 @@ namespace BoostTestAdapter.Utility
         }
 
         /// <summary>
+        /// Wraps the input string in the provided quotation marks if necessary
+        /// </summary>
+        /// <param name="input">The input string to enquote</param>
+        /// <param name="mark">The quotation mark to wrap the input in</param>
+        /// <returns>The input string quoted for command line use</returns>
+        internal static string Enquote(string input, char mark = '"')
+        {
+            return input.Contains(' ') ? string.Format(CultureInfo.InvariantCulture, "{0}{1}{0}", mark, input) : input;
+        }
+
+        /// <summary>
         /// Safely splits a command line string into its argument components.
         /// </summary>
         /// <param name="commandLine">The command line string to split</param>
@@ -77,13 +88,13 @@ namespace BoostTestAdapter.Utility
 
             return commandLine.Split(c =>
             {
-                if ((c == '\\') && (!isEscaping))
+                if ((c == '\\') && !isEscaping)
                 {
                     isEscaping = true;
                     return false;
                 }
 
-                if ((c == '\"') && (!isEscaping))
+                if ((c == '\"') && !isEscaping)
                 {
                     inQuotes = !inQuotes;
                 }
@@ -137,7 +148,7 @@ namespace BoostTestAdapter.Utility
 
         public override string ToString()
         {
-            return NormalizePath(FileName) + ' ' + Arguments;
+            return SanitizeArgument(FileName) + ' ' + Arguments;
         }
 
         /// <summary>
@@ -168,34 +179,34 @@ namespace BoostTestAdapter.Utility
                 return string.Empty;
             }
 
-            var quotedArgs = arguments.Select(arg => arg.Contains(' ') ? string.Format(CultureInfo.InvariantCulture, "\"{0}\"", arg) : arg);
+            var quotedArgs = arguments.Select(arg => CommandLineArgExtensions.Enquote(arg));
             return string.Join(" ", quotedArgs);
         }
 
         /// <summary>
-        /// Normalizes the file path and adds quotes should the path not be quoted already
+        /// Sanitizes the command line argument component for command line use
         /// </summary>
-        /// <param name="filePath">The path to notmalized</param>
-        /// <returns>A normalized file path</returns>
-        private static string NormalizePath(string filePath)
+        /// <param name="argument">The command line argument component to sanitize</param>
+        /// <returns>Sanitized command line argument</returns>
+        private static string SanitizeArgument(string argument)
         {
-            var path = filePath?.Trim();
+            var arg = argument?.Trim();
 
             // Invalid input, return immediately
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(arg))
             {
-                return path;
+                return arg;
             }
 
             const char mark = '"';
 
             // If the path is already quoted, leave as is
-            if (CommandLineArgExtensions.IsQuoted(path, mark))
+            if (CommandLineArgExtensions.IsQuoted(arg, mark))
             {
-                return path;
+                return arg;
             }
 
-            return path.Contains(' ') ? (mark + path + mark) : path;
+            return CommandLineArgExtensions.Enquote(arg, mark);
         }
     }
 }
