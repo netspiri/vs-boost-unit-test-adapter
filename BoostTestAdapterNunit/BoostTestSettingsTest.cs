@@ -1,4 +1,4 @@
-﻿// (C) Copyright ETAS 2015.
+﻿// (C) Copyright 2015 ETAS GmbH (http://www.etas.com/)
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -108,7 +108,7 @@ namespace BoostTestAdapterNunit
 
             Assert.That(settings.ExternalTestRunner, Is.Not.Null);
             Assert.That(settings.ExternalTestRunner.ExtensionType.ToString(), Is.EqualTo(".dll"));
-            Assert.That(settings.ExternalTestRunner.ExecutionCommandLine.ToString(), Is.EqualTo("C:\\ExternalTestRunner.exe --test {source} "));
+            Assert.That(settings.ExternalTestRunner.ExecutionCommandLine.ToString(), Is.EqualTo("C:\\ExternalTestRunner.exe --test {source}"));
         }
 
         /// <summary>

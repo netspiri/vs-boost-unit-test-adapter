@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace BoostTestAdapter.Utility
@@ -44,11 +45,34 @@ namespace BoostTestAdapter.Utility
         /// <returns>'input' with the beginning and end 'quote' removed</returns>
         public static string TrimMatchingQuotes(this string input, char quote)
         {
-            if ((input.Length >= 2) &&
-                (input[0] == quote) && (input[input.Length - 1] == quote))
+            if (IsQuoted(input, quote))
+            {
                 return input.Substring(1, input.Length - 2);
+            }
 
             return input;
+        }
+
+        /// <summary>
+        /// States if the provided string is quoted using the provided quotation marks
+        /// </summary>
+        /// <param name="input">The input string to test</param>
+        /// <param name="mark">The quotation mark to test for</param>
+        /// <returns>true if the input string is within quotation marks; false otherwise</returns>
+        internal static bool IsQuoted(string input, char mark = '"')
+        {
+            return (input.Length >= 2) && (input[0] == mark) && (input[input.Length - 1] == mark);
+        }
+
+        /// <summary>
+        /// Wraps the input string in the provided quotation marks if necessary
+        /// </summary>
+        /// <param name="input">The input string to enquote</param>
+        /// <param name="mark">The quotation mark to wrap the input in</param>
+        /// <returns>The input string quoted for command line use</returns>
+        internal static string Enquote(string input, char mark = '"')
+        {
+            return input.Contains(' ') ? string.Format(CultureInfo.InvariantCulture, "{0}{1}{0}", mark, input) : input;
         }
 
         /// <summary>
@@ -64,14 +88,20 @@ namespace BoostTestAdapter.Utility
 
             return commandLine.Split(c =>
             {
-                if (c == '\\' && !isEscaping) { isEscaping = true; return false; }
+                if ((c == '\\') && !isEscaping)
+                {
+                    isEscaping = true;
+                    return false;
+                }
 
-                if (c == '\"' && !isEscaping)
+                if ((c == '\"') && !isEscaping)
+                {
                     inQuotes = !inQuotes;
+                }
 
                 isEscaping = false;
 
-                return !inQuotes && Char.IsWhiteSpace(c)/*c == ' '*/;
+                return !inQuotes && char.IsWhiteSpace(c);
             })
                 .Select(arg => arg.Trim().TrimMatchingQuotes('\"').Replace("\\\"", "\""))
                 .Where(arg => !string.IsNullOrEmpty(arg));
@@ -108,18 +138,9 @@ namespace BoostTestAdapter.Utility
         /// <param name="fileName">The file component of the command line</param>
         /// <param name="arguments">The arguments of the command line</param>
         /// <remarks>Handles quoting in case of spaces</remarks>
-        public CommandLine(string fileName, IEnumerable<string> arguments)
+        public CommandLine(string fileName, IEnumerable<string> arguments) :
+            this(fileName, JoinArguments(arguments))
         {
-            FileName = fileName;
-            Arguments = "";
-            
-            if (arguments == null)
-                return;
-
-            foreach(string arg in arguments)
-            {
-                Arguments += (arg.Contains(' ') ? "\"" + arg + "\"" : arg) + " ";
-            }
         }
 
         public string FileName { get; set; }
@@ -127,7 +148,7 @@ namespace BoostTestAdapter.Utility
 
         public override string ToString()
         {
-            return FileName + ' ' + Arguments;
+            return SanitizeArgument(FileName) + ' ' + Arguments;
         }
 
         /// <summary>
@@ -137,13 +158,55 @@ namespace BoostTestAdapter.Utility
         /// <returns>The command line instance parsed from cmdLine</returns>
         public static CommandLine FromString(string cmdLine)
         {
-            cmdLine = (cmdLine == null) ? string.Empty : cmdLine;
+            cmdLine = cmdLine ?? string.Empty;
 
             var splitCommandLine = CommandLineArgExtensions.SplitCommandLine(cmdLine);
             return new CommandLine(
                 splitCommandLine.FirstOrDefault(),
                 splitCommandLine.Skip(1)
             );
+        }
+
+        /// <summary>
+        /// Concatenates a collection of strings as a valid command-line argument set
+        /// </summary>
+        /// <param name="arguments">The arguments to serialize</param>
+        /// <returns>string representing the concatenation set of all arguments</returns>
+        private static string JoinArguments(IEnumerable<string> arguments)
+        {
+            if (arguments == null)
+            {
+                return string.Empty;
+            }
+
+            var quotedArgs = arguments.Select(arg => CommandLineArgExtensions.Enquote(arg));
+            return string.Join(" ", quotedArgs);
+        }
+
+        /// <summary>
+        /// Sanitizes the command line argument component for command line use
+        /// </summary>
+        /// <param name="argument">The command line argument component to sanitize</param>
+        /// <returns>Sanitized command line argument</returns>
+        private static string SanitizeArgument(string argument)
+        {
+            var arg = argument?.Trim();
+
+            // Invalid input, return immediately
+            if (string.IsNullOrEmpty(arg))
+            {
+                return arg;
+            }
+
+            const char mark = '"';
+
+            // If the path is already quoted, leave as is
+            if (CommandLineArgExtensions.IsQuoted(arg, mark))
+            {
+                return arg;
+            }
+
+            return CommandLineArgExtensions.Enquote(arg, mark);
         }
     }
 }
