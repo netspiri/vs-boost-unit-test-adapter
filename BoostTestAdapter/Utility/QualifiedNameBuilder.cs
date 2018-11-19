@@ -160,7 +160,18 @@ namespace BoostTestAdapter.Utility
         public override string ToString()
         {
             // Skip the Master Test Suite. Master Test Suite is omitted in qualified name.
-            return string.Join(Separator, this.Path.Skip(1));
+            return ToString(Separator);
+        }
+
+        /// <summary>
+        /// Provides a string representation of this fully qualified name as expected by Boost Test standards.
+        /// </summary>
+        /// <param name="separator">Path component seperator</param>
+        /// <returns>A string representation of this fully qualified name as expected by Boost Test standards.</returns>
+        public string ToString(string separator)
+        {
+            // Skip the Master Test Suite. Master Test Suite is omitted in qualified name.
+            return string.Join(separator, this.Path.Skip(1));
         }
 
         #endregion object overrides
