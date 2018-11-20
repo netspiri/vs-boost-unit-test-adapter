@@ -197,6 +197,19 @@ namespace BoostTestAdapter.Utility
         /// <returns>A QualifiedNameBuilder from the provided string.</returns>
         public static QualifiedNameBuilder FromString(string masterSuite, string name)
         {
+            return FromString(masterSuite, name, Separator);
+        }
+
+        /// <summary>
+        /// Factory method which creates a QualifiedNameBuilder
+        /// from an already existing qualified name string.
+        /// </summary>
+        /// <param name="masterSuite">The local name of the master test suite</param>
+        /// <param name="name">The qualified name</param>
+        /// <param name="separator">Path component seperator</param>
+        /// <returns>A QualifiedNameBuilder from the provided string.</returns>
+        public static QualifiedNameBuilder FromString(string masterSuite, string name, string separator)
+        {
             Utility.Code.Require(masterSuite, "masterSuite");
             Utility.Code.Require(name, "name");
 
@@ -204,7 +217,7 @@ namespace BoostTestAdapter.Utility
 
             builder.Push(masterSuite);
 
-            foreach (string part in name.Split(new string[] { Separator }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string part in name.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries))
             {
                 builder.Push(part);
             }
