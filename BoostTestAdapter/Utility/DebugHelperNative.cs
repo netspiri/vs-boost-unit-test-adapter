@@ -87,7 +87,7 @@ namespace BoostTestAdapter.Utility
                 public fixed byte OptionalHeader[224];
             }
 
-            [StructLayout(LayoutKind.Sequential)]
+            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
             internal struct SYMBOL_INFO
             {
                 public uint SizeOfStruct;
