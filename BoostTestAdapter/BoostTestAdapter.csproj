@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <FilesToLocalize Include="$(OutDir)\BoostTestAdapter.dll">
+    <FilesToLocalize Include="$(OutDir)\BoostTestAdapter.TestAdapter.dll">
       <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\BoostTestAdapter.dll.lcl</TranslationFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\$(AssemblyName).dll" Condition="'$(RealSign)' == 'True'">
